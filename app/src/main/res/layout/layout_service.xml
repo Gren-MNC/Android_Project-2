@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+    <ImageView
+        android:id="@+id/img_song"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher" />
+
+    <LinearLayout
+        android:layout_toEndOf="@+id/img_song"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_song"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            />
+        <TextView
+            android:id="@+id/tv_single"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="13sp" />
+    </LinearLayout>
+        <ImageView
+            android:id="@+id/btn_pause"
+            android:layout_below="@+id/img_song"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_pause"
+            android:layout_centerVertical="true" />
+        <ImageView
+            android:id="@+id/btn_next"
+            android:layout_below="@+id/img_song"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_next"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="200dp"/>
+        <ImageView
+            android:id="@+id/btn_pre"
+            android:layout_below="@+id/img_song"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_pre"
+            android:layout_alignLeft="@+id/btn_pause"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="200dp"
+            />
+
+
+</RelativeLayout>
