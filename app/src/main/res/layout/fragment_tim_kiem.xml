@@ -3,14 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <com.google.android.material.appbar.AppBarLayout
-        android:background="@color/colorPrimary"
+        android:background="@color/purple_200"
         android:id="@+id/appBarLayoutSearchMusic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolBarSearchMusic"
+<!--        <androidx.appcompat.widget.Toolbar-->
+<!--            android:id="@+id/toolBarSearchMusic"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="?attr/actionBarSize"/>-->
+        <androidx.appcompat.widget.SearchView
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"/>
+            android:layout_height="match_parent"
+            android:background="#fff"
+            android:layout_margin="5dp"/>
     </com.google.android.material.appbar.AppBarLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewSearchMusic"
@@ -25,5 +30,6 @@
         android:textSize="35sp"
         android:layout_marginTop="30dp"
         android:gravity="center_horizontal"
-        android:text="Không tìm thấy kết quả"/>
+        android:text="Không tìm thấy kết quả"
+        android:visibility="gone"/>
 </RelativeLayout>

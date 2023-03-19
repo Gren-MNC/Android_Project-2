@@ -1,14 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/fragment_thu_vien"
     android:layout_height="match_parent"
-    tools:context=".Fragment.Fragment_Ca_nhan">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    android:scrollbars="none"
+    android:fillViewport="true">
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content">
+        <fragment
+            android:id="@+id/fragmentTimKiem"
+            android:name="com.example.layoutservice.Fragment.Fragment_Tim_Kiem"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            tools:layout="@layout/fragment_tim_kiem" />
+        <fragment
+            android:id="@+id/fragmentBanner"
+            android:name="com.example.layoutservice.Fragment.FragmentBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_banner" />
+        <fragment
+            android:id="@+id/fragment_lib"
+            android:name="com.example.layoutservice.Fragment.Fragment_Thu_vien_ca_nhan"
+            android:layout_width="match_parent"
+            android:layout_height="195dp"
+            tools:layout="@layout/fragment_thu_vien_ca_nhan" />
 
-</FrameLayout>
+        <fragment
+            android:id="@+id/nhac_da_nghe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:name="com.example.layoutservice.Fragment.Fragment_nhac_da_nghe"
+            tools:layout="@layout/fragment_nhac_da_nghe"
+            />
+
+        <fragment
+            android:id="@+id/fragmentPlayList"
+            android:name="com.example.layoutservice.Fragment.Fragment_PlayList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_playlist" />
+    </LinearLayout>
+
+</ScrollView>

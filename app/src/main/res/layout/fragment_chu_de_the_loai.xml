@@ -6,7 +6,7 @@
         android:id="@+id/relativeChuDeTheLoai"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="7dp">
+        android:padding="10dp">
         <TextView
             android:id="@+id/tvTitleChuDeVaTheLoai"
             android:layout_width="wrap_content"
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:text="xem thêm"
             android:textSize="15sp"
-            android:textColor="@color/purple_200"
+            android:textColor="@color/purple_500"
             android:layout_alignParentRight="true" />
     </RelativeLayout>
     <HorizontalScrollView

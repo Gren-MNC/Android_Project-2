@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.android.mp3musicapp.R;
+import com.example.layoutservice.R;
 
 public class Fragment_Trang_Chu extends Fragment {
 

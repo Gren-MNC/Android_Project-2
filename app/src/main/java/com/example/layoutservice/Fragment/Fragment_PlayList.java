@@ -13,14 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.android.mp3musicapp.Activity.AllPlayListActivity;
-import com.example.android.mp3musicapp.Activity.MusicListActivity;
-import com.example.android.mp3musicapp.Adapter.PlayListAdapter;
-import com.example.android.mp3musicapp.Model.PlayList;
-import com.example.android.mp3musicapp.R;
-import com.example.android.mp3musicapp.Service.ApiService;
-import com.example.android.mp3musicapp.Service.DataService;
-import com.example.android.mp3musicapp.Utils.Utils;
+import com.example.layoutservice.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,54 +26,10 @@ public class Fragment_PlayList extends Fragment{
     View view;
     ListView lvPlayList;
     TextView tvTitlePlayList, tvXemThem;
-    PlayListAdapter playListAdapter;
-    ArrayList<PlayList> arrayPlayList;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_playlist, container, false);
-        bindingView();
-        getData();
-        tvXemThem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AllPlayListActivity.class);
-                startActivity(intent);
-            }
-        });
         return view;
-    }
-
-    private void bindingView() {
-        lvPlayList = view.findViewById(R.id.listViewPlayList);
-        tvTitlePlayList = view.findViewById(R.id.tvTitlePlayList);
-        tvXemThem = view.findViewById(R.id.tvMorePlayList);
-    }
-
-    private void getData() {
-        DataService dataService = ApiService.getService();
-        Call<List<PlayList>> callback = dataService.getPlayListCurrentDay();
-        callback.enqueue(new Callback<List<PlayList>>() {
-            @Override
-            public void onResponse(Call<List<PlayList>> call, Response<List<PlayList>> response) {
-                arrayPlayList = (ArrayList<PlayList>) response.body();
-                playListAdapter = new PlayListAdapter(getActivity(), android.R.layout.simple_list_item_1, arrayPlayList);
-                lvPlayList.setAdapter(playListAdapter);
-                Utils.setListViewHeightBasedOnChildren(lvPlayList);
-                lvPlayList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent intent = new Intent(getActivity(), MusicListActivity.class);
-                        intent.putExtra("itemplaylist", arrayPlayList.get(position));
-                        startActivity(intent);
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Call<List<PlayList>> call, Throwable t) {
-
-            }
-        });
     }
 }

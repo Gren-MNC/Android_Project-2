@@ -1,34 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="MainActivity">
+    tools:context=".CustomListViewActivity.MainActivity">
 
-<!--    <androidx.viewpager.widget.ViewPager-->
-<!--        android:id="@+id/myViewPager"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_weight="1">-->
-<!--    </androidx.viewpager.widget.ViewPager>-->
-<!--    <com.google.android.material.tabs.TabLayout-->
-
-    <FrameLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-<!--        android:id="@+id/myTabLayout"-->
-<!--        app:tabMode="fixed"-->
-<!--        app:tabIndicatorColor="@color/purple_200"-->
-<!--        app:tabSelectedTextColor="@color/purple_500"-->
-<!--        app:tabIconTint="#9E9E9E"-->
-<!--        app:tabTextColor="#9E9E9E"-->
-<!--        app:tabIndicatorHeight="2dp"-->
-<!--        android:background="@android:color/transparent"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content">-->
-<!--    </com.google.android.material.tabs.TabLayout>-->
+        android:layout_height="3dp"
+        android:background="@color/purple_200"
+        app:layout_constraintBottom_toBottomOf="@+id/tabLayout"/>
 
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_200"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:tabIndicatorHeight="3dp"
+        app:tabMode="fixed"
+        app:tabPaddingBottom="8dp"
+        app:tabPaddingTop="15dp"/>
 
-</LinearLayout>
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/tabLayout"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

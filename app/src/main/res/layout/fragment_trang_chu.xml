@@ -12,6 +12,13 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <fragment
+            android:id="@+id/fragmentTimKiem"
+            android:name="com.example.layoutservice.Fragment.Fragment_Tim_Kiem"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            tools:layout="@layout/fragment_tim_kiem" />
         <fragment
             android:id="@+id/fragmentBanner"
             android:name="com.example.layoutservice.Fragment.FragmentBanner"
@@ -30,18 +37,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:layout="@layout/fragment_chu_de_the_loai" />
+
         <fragment
             android:id="@+id/fragmentAlBumHot"
             android:name="com.example.layoutservice.Fragment.Fragment_Album_Hot"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="172dp"
             tools:layout="@layout/fragment_album_hot" />
-        <fragment
-            android:id="@+id/fragmentBaiHatHot"
-            android:name="com.example.layoutservice.Fragment.Fragment_Bai_Hat_Hot"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_bai_hat_hot" />
     </LinearLayout>
 
 </ScrollView>

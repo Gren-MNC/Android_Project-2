@@ -33,9 +33,6 @@ public class Fragment_ChuDe_TheLoai extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_chu_de_the_loai, container, false);
-        bindingView();
-        init();
-        getData();
         return view;
     }
 

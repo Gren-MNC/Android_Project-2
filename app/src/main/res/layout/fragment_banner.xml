@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <androidx.viewpager.widget.ViewPager
-            android:background="@color/purple_500"
+            android:background="@drawable/background_layout_favorite"
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="180dp">
