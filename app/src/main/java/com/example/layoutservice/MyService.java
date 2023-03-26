@@ -5,6 +5,7 @@ import static com.example.layoutservice.MyApp.Chanel_ID;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,11 +16,19 @@ import android.util.Log;
 import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.layoutservice.CustomListViewActivity.MainActivity;
+import com.example.layoutservice.Receiver.ListSongSingleReceiver;
 
 public class MyService extends Service {
     private MediaPlayer mediaPlayer;
+    private boolean isPlaying;
+    private Song mSong;
+    public static final int ACTION_PAUSE = 1;
+    public static final int ACTION_RESUME = 2;
+    public static final int ACTION_CLEAR = 3;
+    public static final int ACTION_START = 4;
 
     @Override
     public void onCreate(){
@@ -39,10 +48,13 @@ public class MyService extends Service {
             Song song = (Song) bundle.get("object_song");
             if(song!=null)
             {
+                mSong = song;
                 startMusic(song);
                 sendNotification(song);
             }
         }
+        int actionMusic = intent.getIntExtra("action_music_service",0);
+        handleActionMusic(actionMusic);
         return START_NOT_STICKY;
     }
 
@@ -52,6 +64,40 @@ public class MyService extends Service {
             mediaPlayer = MediaPlayer.create(getApplicationContext(), song.getResource());
         }
         mediaPlayer.start();
+        isPlaying = true;
+        sendActionToActivity(ACTION_START);
+    }
+    private void handleActionMusic(int action)
+    {
+        switch (action)
+        {
+            case ACTION_PAUSE:
+                pauseMusic();
+                break;
+            case ACTION_RESUME:
+                resumeMusic();
+                break;
+            case  ACTION_CLEAR:
+                stopSelf();
+                sendActionToActivity(ACTION_CLEAR);
+                break;
+        }
+    }
+    private void pauseMusic() {
+        if(mediaPlayer != null && isPlaying){
+            mediaPlayer.pause();
+            isPlaying = false;
+            sendNotification(mSong);
+            sendActionToActivity(ACTION_PAUSE);
+        }
+    }
+    private void resumeMusic() {
+        if(mediaPlayer != null && !isPlaying){
+            mediaPlayer.start();
+            isPlaying = true;
+            sendNotification(mSong);
+            sendActionToActivity(ACTION_RESUME);
+        }
     }
 
     private void sendNotification(Song song) {
@@ -64,16 +110,34 @@ public class MyService extends Service {
         remoteViews.setTextViewText(R.id.tv_song,song.getTitle());
         remoteViews.setTextViewText(R.id.tv_single,song.getSinger());
         remoteViews.setImageViewBitmap(R.id.img_song,bitmap);
-        remoteViews.setImageViewResource(R.id.btn_pause,R.drawable.ic_pause);
+        remoteViews.setImageViewResource(R.id.btn_pause_or_play,R.drawable.ic_pause);
 
+        if(isPlaying)
+        {
+            remoteViews.setOnClickPendingIntent(R.id.btn_pause_or_play,getPendingIntent(this,ACTION_PAUSE));
+            remoteViews.setImageViewResource(R.id.btn_pause_or_play,R.drawable.ic_pause);
+        }
+        else
+        {
+            remoteViews.setOnClickPendingIntent(R.id.btn_pause_or_play,getPendingIntent(this,ACTION_RESUME));
+            remoteViews.setImageViewResource(R.id.btn_pause_or_play,R.drawable.ic_play);
+        }
+
+        //remoteViews.setOnClickPendingIntent(R.id.img_cancel,getPendingIntent(this,ACTION_CLEAR));
 
         Notification notification = new NotificationCompat.Builder(this,Chanel_ID)
-                .setSmallIcon(R.drawable.ic_music)
+                .setSmallIcon(R.drawable.ic_home)
                 .setContentIntent(pendingIntent)
                 .setCustomContentView(remoteViews)
                 .setSound(null)
                 .build();
         startForeground(1, notification);
+    }
+    private PendingIntent getPendingIntent(Context context, int action) {
+        Intent intent = new Intent(this, ListSongSingleReceiver.class);
+        intent.putExtra("action_music",action);
+
+        return PendingIntent.getBroadcast(context.getApplicationContext(),action,intent,PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     @Override
@@ -85,5 +149,15 @@ public class MyService extends Service {
             mediaPlayer.release();
             mediaPlayer = null;
         }
+    }
+    private void sendActionToActivity(int action){
+        Intent intent = new Intent("send_data_to_activity");
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("object_song",mSong);
+        bundle.putBoolean("status_music",isPlaying);
+        bundle.putInt("action_music",action);
+
+        intent.putExtras(bundle);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }

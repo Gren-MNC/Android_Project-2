@@ -33,7 +33,7 @@
             android:textSize="13sp" />
     </LinearLayout>
         <ImageView
-            android:id="@+id/btn_pause"
+            android:id="@+id/btn_pause_or_play"
             android:layout_below="@+id/img_song"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_pre"
-            android:layout_alignLeft="@+id/btn_pause"
+            android:layout_alignLeft="@+id/btn_pause_or_play"
             android:layout_centerVertical="true"
             android:layout_marginRight="200dp"
             />

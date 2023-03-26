@@ -1,72 +1,90 @@
 package com.example.layoutservice.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.layoutservice.MyService;
 import com.example.layoutservice.R;
 import com.example.layoutservice.Song;
 
 import java.util.List;
 
-public class ListSongSingleAdapter extends BaseAdapter {
+public class ListSongSingleAdapter extends RecyclerView.Adapter<ListSongSingleAdapter.ListSongSingleHolder> {
+    private List<Song> songList;
     private Context context;
-    private int idLayout;
-    private List<Song> listSong;
-    private int positionSelect = -1;
-
-    public ListSongSingleAdapter(Context context, int idLayout, List<Song> listSong){
+    @NonNull
+    @Override
+    public ListSongSingleHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_sub_single, parent,false);
+        return new ListSongSingleHolder(view);
+    }
+    public ListSongSingleAdapter(Context context,List<Song> songList){
+        this.songList = songList;
         this.context = context;
-        this.idLayout = idLayout;
-        this.listSong = listSong;
     }
-
     @Override
-    public int getCount() {
-        if (listSong.size() != 0 && !listSong.isEmpty()){
-            return listSong.size();
+    public void onBindViewHolder(@NonNull ListSongSingleHolder holder, int position) {
+
+        Song song = songList.get(position);
+        if(song == null){
+            return;
         }
-        return 0;
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return null;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        if(convertView == null){
-            convertView = LayoutInflater.from(parent.getContext()).inflate(idLayout, parent, false);
-        }
-        TextView textViewName = (TextView) convertView.findViewById(R.id.tv_song);
-        TextView textViewSingle = (TextView) convertView.findViewById(R.id.tv_single);
-        final RelativeLayout layoutListView = (RelativeLayout) convertView.findViewById(R.id.idListSongSingle);
-        final Song song = listSong.get(position);
-
-        if(listSong != null && !listSong.isEmpty()){
-            textViewName.setText(song.getTitle());
-            textViewSingle.setText(song.getSinger());
-        }
-        convertView.setOnClickListener(new View.OnClickListener() {
+        holder.txtSong.setText(song.getTitle());
+        holder.txtSingle.setText(song.getSinger());
+        holder.imgAva.setImageResource(song.getImage());
+        holder.layout_item.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Toast.makeText(context, song.getTitle(), Toast.LENGTH_LONG).show();
-                positionSelect = position;
-                notifyDataSetChanged();
+            public void onClick(View view) {
+                clickStarService();
             }
         });
-        return convertView;
+    }
+
+    private void clickStarService() {
+        Song song = new Song("Show Me Love","MCK",R.drawable.img_music, R.raw.lethergo);
+        Intent intent = new Intent(context, MyService.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("object_song",song);
+        intent.putExtras(bundle);
+        context.startService(intent);
+    }
+    @Override
+    public int getItemCount() {
+        if(songList != null)
+        {
+            return songList.size();
+        }
+        return 0;
+    }
+
+    public class ListSongSingleHolder extends RecyclerView.ViewHolder{
+
+
+        private ImageView imgAva;
+        private TextView txtSong;
+        private TextView txtSingle;
+        private RelativeLayout layout_item;
+        public ListSongSingleHolder(@NonNull View v){
+            super(v);
+
+            layout_item = v.findViewById(R.id.layout_item_song_single);
+            txtSingle = v.findViewById(R.id.tv_single);
+            txtSong = v.findViewById(R.id.tv_song);
+            imgAva = v.findViewById(R.id.img_song);
+
+        }
     }
 
 }

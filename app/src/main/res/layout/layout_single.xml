@@ -55,10 +55,11 @@
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="bold"/>
-     <ListView
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_below="@+id/top_song"
-         android:id="@+id/list_view_song_single"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcv_data"
+            android:layout_below="@+id/top_song"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
     </RelativeLayout>
 </RelativeLayout>
