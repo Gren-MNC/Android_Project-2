@@ -31,4 +31,7 @@ public class ListViewDownActivity extends AppCompatActivity {
         SongFavoriteAdapter adapter = new SongFavoriteAdapter(this, R.layout.layout_listview_down, listSong);
         listView.setAdapter(adapter);
     }
+    void displaySongs(){
+
+    }
 }

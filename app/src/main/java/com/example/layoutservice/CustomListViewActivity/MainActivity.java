@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout mtabLayout;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,13 +35,13 @@ public class MainActivity extends AppCompatActivity {
         TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                switch (position){
-                    case 0:{
+                switch (position) {
+                    case 0: {
                         tab.setText("Trang chủ");
                         tab.setIcon(R.drawable.ic_home);
                         break;
                     }
-                    case 1:{
+                    case 1: {
                         tab.setText("Khám phá");
                         tab.setIcon(R.drawable.ic_discover);
                         break;
@@ -60,34 +59,6 @@ public class MainActivity extends AppCompatActivity {
                 badgeDrawable.setVisible(false);
             }
         });
-//        btnStart = findViewById(R.id.btn_start);
-//        btnStop = findViewById(R.id.btn_stop);
-//
-//        btnStart.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                clickStartService();
-//            }
-//        });
 
-//        btnStop.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                clickStopService();
-//            }
-//        });
     }
-//    private void clickStopService() {
-//        Intent intent = new Intent(this,MyService.class);
-//        stopService(intent);
-//    }
-//
-//    private void clickStartService() {
-//        Song song = new Song("Show Me Love","MCK",R.drawable.img_music, R.raw.lethergo);
-//        Intent intent = new Intent(this, MyService.class);
-//        Bundle bundle = new Bundle();
-//        bundle.putSerializable("object_song",song);
-//        intent.putExtras(bundle);
-//        startService(intent);
-//    }
 }

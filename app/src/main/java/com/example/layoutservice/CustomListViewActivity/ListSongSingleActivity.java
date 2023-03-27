@@ -50,10 +50,6 @@ public class ListSongSingleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_single);
 
-
-
-
-
         recyclerView = findViewById(R.id.rcv_data);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);

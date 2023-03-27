@@ -22,8 +22,8 @@ import com.example.layoutservice.CustomListViewActivity.MainActivity;
 import com.example.layoutservice.Receiver.ListSongSingleReceiver;
 
 public class MyService extends Service {
-    private MediaPlayer mediaPlayer;
-    private boolean isPlaying;
+    public static MediaPlayer mediaPlayer;
+    public static boolean isPlaying;
     private Song mSong;
     public static final int ACTION_PAUSE = 1;
     public static final int ACTION_RESUME = 2;
