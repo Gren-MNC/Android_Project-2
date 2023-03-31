@@ -7,8 +7,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -18,8 +16,8 @@ import android.widget.RemoteViews;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.example.layoutservice.CustomListViewActivity.MainActivity;
-import com.example.layoutservice.Receiver.ListSongSingleReceiver;
+import com.example.layoutservice.Activity.ListenToMusicActivity;
+import com.example.layoutservice.Receiver.BroadcastReceiver;
 
 public class MyService extends Service {
     public static MediaPlayer mediaPlayer;
@@ -29,6 +27,8 @@ public class MyService extends Service {
     public static final int ACTION_RESUME = 2;
     public static final int ACTION_CLEAR = 3;
     public static final int ACTION_START = 4;
+    public static final int ACTION_NEXT = 5;
+    public static final int ACTION_PRE = 6;
 
     @Override
     public void onCreate(){
@@ -49,6 +49,7 @@ public class MyService extends Service {
             if(song!=null)
             {
                 mSong = song;
+
                 startMusic(song);
                 sendNotification(song);
             }
@@ -74,13 +75,43 @@ public class MyService extends Service {
             case ACTION_PAUSE:
                 pauseMusic();
                 break;
+
             case ACTION_RESUME:
                 resumeMusic();
                 break;
+
+            case ACTION_NEXT:
+                playNextMusic();
+                break;
+
+            case ACTION_PRE:
+                playPreMusic();
+                break;
+
             case  ACTION_CLEAR:
                 stopSelf();
                 sendActionToActivity(ACTION_CLEAR);
                 break;
+        }
+    }
+
+    private void playPreMusic() {
+        if(mediaPlayer != null){
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            isPlaying = false;
+            sendNotification(mSong);
+            sendActionToActivity(ACTION_PRE);
+        }
+    }
+
+    private void playNextMusic(){
+        if(mediaPlayer != null){
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            isPlaying = false;
+            sendNotification(mSong);
+            sendActionToActivity(ACTION_NEXT);
         }
     }
     private void pauseMusic() {
@@ -101,15 +132,15 @@ public class MyService extends Service {
     }
 
     private void sendNotification(Song song) {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, ListenToMusicActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),song.getImage());
+        //Bitmap bitmap = BitmapFactory.decodeResource(getResources(),song.getImage());
 
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.layout_service);
-
         remoteViews.setTextViewText(R.id.tv_song,song.getTitle());
         remoteViews.setTextViewText(R.id.tv_single,song.getSinger());
-        remoteViews.setImageViewBitmap(R.id.img_song,bitmap);
+        //remoteViews.setImageViewBitmap(R.id.img_song,bitmap);
+
         remoteViews.setImageViewResource(R.id.btn_pause_or_play,R.drawable.ic_pause);
 
         if(isPlaying)
@@ -123,8 +154,6 @@ public class MyService extends Service {
             remoteViews.setImageViewResource(R.id.btn_pause_or_play,R.drawable.ic_play);
         }
 
-        //remoteViews.setOnClickPendingIntent(R.id.img_cancel,getPendingIntent(this,ACTION_CLEAR));
-
         Notification notification = new NotificationCompat.Builder(this,Chanel_ID)
                 .setSmallIcon(R.drawable.ic_home)
                 .setContentIntent(pendingIntent)
@@ -134,10 +163,11 @@ public class MyService extends Service {
         startForeground(1, notification);
     }
     private PendingIntent getPendingIntent(Context context, int action) {
-        Intent intent = new Intent(this, ListSongSingleReceiver.class);
+        Intent intent = new Intent(this, BroadcastReceiver.class);
         intent.putExtra("action_music",action);
 
-        return PendingIntent.getBroadcast(context.getApplicationContext(),action,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getBroadcast(context.getApplicationContext(), action,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     @Override

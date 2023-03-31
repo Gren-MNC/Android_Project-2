@@ -1,6 +1,8 @@
 package com.example.layoutservice.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,18 +11,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.layoutservice.Activity.ListenToMusicActivity;
 import com.example.layoutservice.R;
 import com.example.layoutservice.Song;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SongFavoriteAdapter extends BaseAdapter {
     private Context context;
     private int idLayout;
-    private List<Song> listSong;
+    private ArrayList<Song> listSong;
     private int positionSelect = -1;
 
-    public SongFavoriteAdapter(Context context, int idLayout, List<Song> listSong){
+    public SongFavoriteAdapter(Context context, int idLayout, ArrayList<Song> listSong){
         this.context = context;
         this.idLayout = idLayout;
         this.listSong = listSong;
@@ -61,12 +65,20 @@ public class SongFavoriteAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, song.getTitle(), Toast.LENGTH_LONG).show();
                 positionSelect = position;
-                notifyDataSetChanged();
+
+                Intent intent = new Intent(context, ListenToMusicActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("object_song",song);
+                bundle.putSerializable("listSong_key", listSong);
+                bundle.putInt("position_key", position);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+
             }
         });
         return convertView;
     }
+
 
 }

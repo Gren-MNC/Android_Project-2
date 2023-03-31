@@ -3,144 +3,171 @@ package com.example.layoutservice.Activity;
 import static com.example.layoutservice.MyService.isPlaying;
 import static com.example.layoutservice.MyService.mediaPlayer;
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.PorterDuff;
+
+import android.content.IntentFilter;
+
 import android.os.Bundle;
-import android.os.Handler;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.layoutservice.MyService;
 import com.example.layoutservice.R;
+import com.example.layoutservice.Receiver.BroadcastReceiver;
 import com.example.layoutservice.Song;
+
+import java.util.ArrayList;
 
 public class ListenToMusicActivity extends AppCompatActivity {
 
-    Button btnPlay;
+    Button btnPlay, btnNext, btnPre;
     TextView tvName, tvSinger, tvStart, tvStop;
-    SeekBar seekBarMusic;
+    ArrayList<Song> listSong;
+    private Song mSong;
+    int positionSelect;
+    SeekBar seekMusic;
+    private int actionMusic;
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver(){
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            if (bundle == null){
+                return;
+            }
+            mSong = (Song) bundle.get("object_song");
+            isPlaying = bundle.getBoolean("status_music");
+            actionMusic = bundle.getInt("action_music");
+            if (actionMusic == MyService.ACTION_NEXT){
+                btnNext.performClick();
+            }
+            handleLayoutMusic(actionMusic);
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_play_music);
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
+                new IntentFilter("send_data_to_activity"));
+
         btnPlay = findViewById(R.id.btn_play_main);
+        btnNext = findViewById(R.id.btn_next_main);
+        btnPre = findViewById(R.id.btn_previous_main);
         tvName = findViewById(R.id.title_song);
         tvSinger = findViewById(R.id.single);
         tvStart = findViewById(R.id.tv_time);
         tvStop = findViewById(R.id.tv_time1);
-        seekBarMusic = findViewById(R.id.seekbar);
+        seekMusic = findViewById(R.id.seekbar);
 
+        Intent intent = this.getIntent();
+        Bundle bundle = intent.getExtras();
+
+        if(bundle != null) {
+            if ((mediaPlayer != null && isPlaying) || (mediaPlayer != null && !isPlaying)){
+                mediaPlayer.stop();
+                mediaPlayer.release();
+                mediaPlayer = null;
+            }
+            positionSelect = bundle.getInt("position_key");
+            listSong = (ArrayList<Song>) bundle.getSerializable("listSong_key");
+
+            mSong = (Song) bundle.get("object_song");
+
+            tvName.setText(mSong.getTitle());
+            tvSinger.setText(mSong.getSinger());
+
+            clickStartService();
+            btnPlay.setBackgroundResource(R.drawable.ic_pause_main);
+        }
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // start
-                if (mediaPlayer == null && !isPlaying ){
-                    clickStartService();
-                    btnPlay.setBackgroundResource(R.drawable.ic_pause_main);
-                }
                 // resume
                 if(mediaPlayer != null && !isPlaying){
-                    mediaPlayer.start();
-                    isPlaying = true;
+
                     btnPlay.setBackgroundResource(R.drawable.ic_pause_main);
+                    sendActionToService(MyService.ACTION_RESUME);
                 }
                 // pause
                 else if(mediaPlayer != null && isPlaying){
-                    mediaPlayer.pause();
-                    isPlaying = false;
+
                     btnPlay.setBackgroundResource(R.drawable.ic_play_main);
+                    sendActionToService(MyService.ACTION_PAUSE);
                 }
+            }
+        });
+
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.stop();
+                mediaPlayer.release();
+                mediaPlayer = null;
+                positionSelect = (positionSelect+1) % listSong.size();
+                mSong = listSong.get(positionSelect);
+                clickStartService();
+                tvName.setText(mSong.getTitle());
+                tvSinger.setText(mSong.getSinger());
+                btnPlay.setBackgroundResource(R.drawable.ic_pause_main);
+            }
+        });
+        btnPre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.stop();
+                mediaPlayer.release();
+                mediaPlayer = null;
+                positionSelect = ((positionSelect-1)<0) ? (listSong.size()-1):(positionSelect-1);
+                mSong = listSong.get(positionSelect);
+                clickStartService();
+                tvName.setText(mSong.getTitle());
+                tvSinger.setText(mSong.getSinger());
+                btnPlay.setBackgroundResource(R.drawable.ic_pause_main);
             }
         });
 
     }
     private void clickStartService() {
-        Song song = new Song("Show Me Love", "MCK", R.drawable.img_music, R.raw.lethergo);
+
         Intent intent = new Intent(this, MyService.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("object_song", song);
+        bundle.putSerializable("object_song", mSong);
         intent.putExtras(bundle);
         startService(intent);
 
-        tvName.setText(song.getTitle());
-        tvSinger.setText(song.getSinger());
-
     }
-    /*public void implementSeekbar(){
-        Thread updateSeekBar = new Thread() {
-            @Override
-            public void run() {
-                super.run();
-
-                int totalDuration = mediaPlayer.getDuration();
-                int currentPosition = 0;
-
-                while (currentPosition < totalDuration) {
-                    try {
-                        sleep(500);
-                        currentPosition = mediaPlayer.getCurrentPosition();
-                        seekBarMusic.setProgress(currentPosition);
-                    } catch (InterruptedException | IllegalStateException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-
-        seekBarMusic.setMax(mediaPlayer.getDuration());
-        updateSeekBar.start();
-        seekBarMusic.getProgressDrawable().setColorFilter(getResources().getColor(R.color.black),
-                PorterDuff.Mode.MULTIPLY);
-        seekBarMusic.getThumb().setColorFilter(getResources().getColor(R.color.teal_200),
-                PorterDuff.Mode.SRC_IN);
-        seekBarMusic.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                mediaPlayer.seekTo(seekBar.getProgress());
-            }
-        });
-        String endTime = createTime(mediaPlayer.getDuration());
-        tvStop.setText(endTime);
-
-        final Handler handler = new Handler();
-        final int delay = 1000;
-
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                String currentTime = createTime(mediaPlayer.getCurrentPosition());
-                tvStart.setText(currentTime);
-                handler.postDelayed(this, delay);
-            }
-        }, delay);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
     }
-    public String createTime(int duration){
-        String time = "";
-        int min = duration/1000/60;
-        int sec = duration/1000%60;
-
-        time += min + ":";
-        if (sec<10){
-            time += "0";
+    private void handleLayoutMusic(int action){
+        switch (action){
+            case MyService.ACTION_START:
+                btnPlay.setBackgroundResource(R.drawable.ic_pause_main);
+                break;
+            case MyService.ACTION_PAUSE:
+                btnPlay.setBackgroundResource(R.drawable.ic_play_main);
+                break;
+            case MyService.ACTION_RESUME:
+                btnPlay.setBackgroundResource(R.drawable.ic_pause_main);
+                break;
         }
-        time += sec;
-        return time;
-    }*/
+    }
+    private void sendActionToService(int action){
+        Intent intent = new Intent(this, MyService.class);
+        intent.putExtra("action_music_service", action);
+        startService(intent);
+    }
 }
 
 

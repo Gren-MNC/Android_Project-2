@@ -13,7 +13,7 @@
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         tools:targetApi="31">
         <activity
-            android:name=".Activity.ListenToMusicActivity"
+            android:name=".CustomListViewActivity.ListViewFavoriteActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +21,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activity.ListenToMusicActivity" />
+
         <service android:name=".MyService"/>
+        <receiver android:name=".Receiver.BroadcastReceiver" />
     </application>
 
 </manifest>

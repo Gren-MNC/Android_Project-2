@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListViewFavoriteActivity extends AppCompatActivity {
-    private List<Song> listSong;
+    private ArrayList<Song> listSong;
     private ListView listView;
 
     @Override
@@ -24,15 +24,13 @@ public class ListViewFavoriteActivity extends AppCompatActivity {
 
         listView = (ListView) findViewById(R.id.list_view_favorite);
         listSong = new ArrayList<>();
-        listSong.add(new Song("Quên em đi","Single Khánh Ngân",R.drawable.ic_music,12));
-        listSong.add(new Song("Quên anh đi","Single Khánh Ngân",R.drawable.ic_music,12));
-        listSong.add(new Song("Quên em đi","Single Khánh Ngân",R.drawable.ic_music,12));
-        listSong.add(new Song("Quên anh đi","Single Khánh Ngân",R.drawable.ic_music,12));
-        listSong.add(new Song("Quên em đi","Single A",R.drawable.ic_music,12));
-        listSong.add(new Song("Quên anh đi","Single A",R.drawable.ic_music,12));
-        listSong.add(new Song("Quên em đi","Single A",R.drawable.ic_music,12));
-        listSong.add(new Song("Quên anh đi","Single A",R.drawable.ic_music,12));
+        listSong.add(new Song("Cô đơn trên sofa(Cover)","Trung Quân Idol",R.drawable.ic_music,R.raw.codontrensofa_cover_trungquan));
+        listSong.add(new Song("Cứu vãn kịp không","Vương Anh Tú",R.drawable.ic_music,R.raw.cuuvankipkhong_vuonganhtu));
+        listSong.add(new Song("Nếu lúc đó","Tlinh",R.drawable.ic_music,R.raw.neulucdo_tlinh));
+        listSong.add(new Song("Ngủ một mình","HieuThuHai",R.drawable.ic_music,R.raw.ngumotminh_hieuthuhai));
+
         SongFavoriteAdapter adapter = new SongFavoriteAdapter(this, R.layout.layout_listview, listSong);
         listView.setAdapter(adapter);
+
     }
 }

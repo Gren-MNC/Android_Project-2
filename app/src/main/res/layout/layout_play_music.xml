@@ -24,13 +24,13 @@
         android:layout_height="wrap_content"
         android:text="Song Name"
         android:textColor="@color/white"
-        android:textSize="40sp"
+        android:textSize="25sp"
         android:layout_below="@id/img_music"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
         android:textAllCaps="true"
         android:textStyle="bold"
-        android:fontFamily="@font/aslam"/>
+        android:fontFamily="serif"/>
 
     <TextView
         android:id="@+id/single"
@@ -40,9 +40,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:textColor="@color/white"
-        android:textSize="30sp"
+        android:textSize="25sp"
         android:text="single"
-        android:fontFamily="@font/aslam"/>
+        android:fontFamily="serif"/>
     <SeekBar
         android:id="@+id/seekbar"
         android:layout_width="250dp"
@@ -88,13 +88,13 @@
         android:layout_below="@+id/seekbar"
         android:layout_marginTop="40dp"
         android:layout_toLeftOf="@+id/btn_play_main"
-        android:background="@drawable/ic_previous_main"
+        android:background="@drawable/btn_pre"
         android:contentDescription="ic_previous" />
     <Button
         android:id="@+id/btn_next_main"
         android:layout_width="60dp"
         android:layout_height="70dp"
-        android:background="@drawable/ic_next_main"
+        android:background="@drawable/btn_next"
         android:layout_below="@+id/seekbar"
         android:layout_toRightOf="@+id/btn_play_main"
         android:layout_marginTop="40dp"

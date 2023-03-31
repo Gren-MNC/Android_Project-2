@@ -29,17 +29,17 @@
         android:textSize="18dp" />
     <Button
         android:id="@+id/btn_download"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="4dp"
-        android:background="@drawable/ic_download_black"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/ic_download_deep_lilac"
         android:layout_alignParentEnd="true"
         android:contentDescription="btn_download"/>
     <Button
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/ic_like2"
         android:layout_toLeftOf="@id/btn_download"
-        android:layout_marginRight="20dp"/>
+        android:layout_marginRight="10dp"/>
 </RelativeLayout>
