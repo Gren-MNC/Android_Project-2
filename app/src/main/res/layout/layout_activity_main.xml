@@ -16,7 +16,7 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/purple_200"
+        android:background="@color/purple_500"
         app:layout_constraintBottom_toBottomOf="parent"
         app:tabIndicatorHeight="3dp"
         app:tabMode="fixed"
