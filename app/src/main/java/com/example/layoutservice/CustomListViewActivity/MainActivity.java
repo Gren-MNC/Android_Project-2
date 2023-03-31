@@ -51,14 +51,5 @@ public class MainActivity extends AppCompatActivity {
         });
         tabLayoutMediator.attach();
 
-        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                BadgeDrawable badgeDrawable = tabLayout.getTabAt(position).getOrCreateBadge();
-                badgeDrawable.setVisible(false);
-            }
-        });
-
     }
 }
