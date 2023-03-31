@@ -15,22 +15,30 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.layoutservice.Activity.ListenToMusicActivity;
 import com.example.layoutservice.MyService;
 import com.example.layoutservice.R;
 import com.example.layoutservice.Song;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListSongSingleAdapter extends RecyclerView.Adapter<ListSongSingleAdapter.ListSongSingleHolder> {
-    private List<Song> songList;
+    private ArrayList<Song> songList;
     private Context context;
+
+    private int idLayout;
+    private ArrayList<Song> listSong;
+    private int positionSelect = -1;
+
+
     @NonNull
     @Override
     public ListSongSingleHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_sub_single, parent,false);
         return new ListSongSingleHolder(view);
     }
-    public ListSongSingleAdapter(Context context,List<Song> songList){
+    public ListSongSingleAdapter(Context context,ArrayList<Song> songList){
         this.songList = songList;
         this.context = context;
     }
@@ -47,13 +55,21 @@ public class ListSongSingleAdapter extends RecyclerView.Adapter<ListSongSingleAd
         holder.layout_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clickStarService();
+
+                positionSelect = holder.getAdapterPosition();
+                Intent intent = new Intent(context, ListenToMusicActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("object_song",song);
+                bundle.putSerializable("listSong_key", songList);
+                bundle.putInt("position_key", holder.getAdapterPosition());
+                intent.putExtras(bundle);
+                context.startActivity(intent);
             }
         });
     }
 
     private void clickStarService() {
-        Song song = new Song("Show Me Love","MCK",R.drawable.img_music, R.raw.lethergo);
+        Song song = new Song("Eye nose lips","Teayang",R.drawable.eyenoselips, R.raw.lethergo);
         Intent intent = new Intent(context, MyService.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("object_song",song);
@@ -86,5 +102,6 @@ public class ListSongSingleAdapter extends RecyclerView.Adapter<ListSongSingleAd
 
         }
     }
+
 
 }
