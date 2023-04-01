@@ -37,7 +37,7 @@ public class Fragment_Tim_Kiem extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_thu_vien_ca_nhan, container, false);
+        return inflater.inflate(R.layout.fragment_tim_kiem, container, false);
     }
 }
 
