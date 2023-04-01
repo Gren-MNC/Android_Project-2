@@ -1,35 +1,41 @@
-package com.example.layoutservice.CustomListViewActivity;
+package com.example.layoutservice.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.layoutservice.Activity.ListenToMusicActivity;
+import com.example.layoutservice.Adapter.SongDownAdapter;
 import com.example.layoutservice.Adapter.SongFavoriteAdapter;
 import com.example.layoutservice.R;
 import com.example.layoutservice.Song;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class ListViewFavoriteActivity extends AppCompatActivity {
+public class ListViewDownActivity extends AppCompatActivity {
     private ArrayList<Song> listSong;
     private ListView listView;
+
+    private Song mSong;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_list_favorite);
+        setContentView(R.layout.layout_list_download);
 
-        listView = (ListView) findViewById(R.id.list_view_favorite);
+        listView = (ListView) findViewById(R.id.list_view_download);
         listSong = new ArrayList<>();
-        listSong.add(new Song("Cô đơn trên sofa(Cover)","Trung Quân Idol",R.drawable.ic_music,R.raw.codontrensofa_cover_trungquan));
+        listSong.add(new Song("Muộn rồi mà sao còn","Sơn Tùng MTP",R.drawable.ic_music,R.raw.muonroimasaocon_sontungmtp));
         listSong.add(new Song("Cứu vãn kịp không","Vương Anh Tú",R.drawable.ic_music,R.raw.cuuvankipkhong_vuonganhtu));
         listSong.add(new Song("Nếu lúc đó","Tlinh",R.drawable.ic_music,R.raw.neulucdo_tlinh));
         listSong.add(new Song("Ngủ một mình","HieuThuHai",R.drawable.ic_music,R.raw.ngumotminh_hieuthuhai));
 
-        SongFavoriteAdapter adapter = new SongFavoriteAdapter(this, R.layout.layout_listview, listSong);
+        SongDownAdapter adapter = new SongDownAdapter(this, R.layout.layout_listview_down, listSong);
         listView.setAdapter(adapter);
 
     }

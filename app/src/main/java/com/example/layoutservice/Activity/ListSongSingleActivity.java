@@ -1,4 +1,4 @@
-package com.example.layoutservice.CustomListViewActivity;
+package com.example.layoutservice.Activity;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;

@@ -6,8 +6,13 @@
     android:layout_height="match_parent"
     android:background="@drawable/background"
     android:padding="10dp"
-    tools:context=".CustomListViewActivity.MainActivity">
+    tools:context=".Activity.MainActivity">
 
+    <Button
+        android:id="@+id/btn_back"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/ic_back"/>
     <ImageView
         android:id="@+id/img_music"
         android:layout_width="wrap_content"
@@ -15,7 +20,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="80dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="50dp"
         android:src="@drawable/music" />
 
     <TextView
@@ -27,7 +32,7 @@
         android:textSize="25sp"
         android:layout_below="@id/img_music"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:textAllCaps="true"
         android:textStyle="bold"
         android:fontFamily="serif"/>
@@ -101,8 +106,8 @@
         android:contentDescription="btn_next"/>
     <Button
         android:id="@+id/btn_list"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:background="@drawable/ic_list_music"
@@ -111,8 +116,8 @@
         android:contentDescription="btn_list"/>
     <Button
         android:id="@+id/btn_down"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
@@ -120,8 +125,8 @@
         android:contentDescription="btn_down"/>
     <Button
         android:id="@+id/btn_like"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="20dp"
         android:background="@drawable/ic_like1"
@@ -130,24 +135,24 @@
 
     <Button
         android:id="@+id/btn_shuffle"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_below="@+id/seekbar"
-        android:layout_marginTop="55dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginTop="61dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="40dp"
         android:layout_toStartOf="@+id/btn_previous_main"
         android:layout_toLeftOf="@+id/btn_previous_main"
         android:background="@drawable/shuffle"
-        android:contentDescription="btn-shuffle"/>
+        android:contentDescription="btn-shuffle" />
+
     <Button
         android:id="@+id/btn_repeat"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_below="@+id/seekbar"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="55dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="60dp"
         android:layout_toEndOf="@+id/btn_next_main"
         android:layout_toRightOf="@id/btn_next_main"
         android:background="@drawable/repeat"

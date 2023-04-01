@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 public class ListenToMusicActivity extends AppCompatActivity {
 
-    Button btnPlay, btnNext, btnPre;
+    Button btnPlay, btnNext, btnPre, btnList, btnBack;
     TextView tvName, tvSinger, tvStart, tvStop;
     ArrayList<Song> listSong;
     private Song mSong;
@@ -62,6 +62,8 @@ public class ListenToMusicActivity extends AppCompatActivity {
         btnPlay = findViewById(R.id.btn_play_main);
         btnNext = findViewById(R.id.btn_next_main);
         btnPre = findViewById(R.id.btn_previous_main);
+        btnList = findViewById(R.id.btn_list);
+        btnBack = findViewById(R.id.btn_back);
         tvName = findViewById(R.id.title_song);
         tvSinger = findViewById(R.id.single);
         tvStart = findViewById(R.id.tv_time);
@@ -132,6 +134,23 @@ public class ListenToMusicActivity extends AppCompatActivity {
                 tvName.setText(mSong.getTitle());
                 tvSinger.setText(mSong.getSinger());
                 btnPlay.setBackgroundResource(R.drawable.ic_pause_main);
+            }
+        });
+        btnList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ListenToMusicActivity.this, ListSongPlayingActivity.class);
+                Bundle b = new Bundle();
+                b.putSerializable("listSong_key", listSong);
+                i.putExtras(b);
+                startActivity(i);
+
+            }
+        });
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
             }
         });
 

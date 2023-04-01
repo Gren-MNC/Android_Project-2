@@ -1,4 +1,4 @@
-package com.example.layoutservice.CustomListViewActivity;
+package com.example.layoutservice.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
