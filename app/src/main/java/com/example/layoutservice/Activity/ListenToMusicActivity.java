@@ -63,7 +63,7 @@ public class ListenToMusicActivity extends AppCompatActivity {
         btnNext = findViewById(R.id.btn_next_main);
         btnPre = findViewById(R.id.btn_previous_main);
         btnList = findViewById(R.id.btn_list);
-        btnBack = findViewById(R.id.btn_back);
+        btnBack = findViewById(R.id.btn_back_playing);
         tvName = findViewById(R.id.title_song);
         tvSinger = findViewById(R.id.single);
         tvStart = findViewById(R.id.tv_time);

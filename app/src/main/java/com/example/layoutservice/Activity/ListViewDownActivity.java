@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
@@ -20,13 +21,14 @@ import java.util.ArrayList;
 public class ListViewDownActivity extends AppCompatActivity {
     private ArrayList<Song> listSong;
     private ListView listView;
-
+    private Button btnBack;
     private Song mSong;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_list_download);
+        btnBack = findViewById(R.id.btn_back_down);
 
         listView = (ListView) findViewById(R.id.list_view_download);
         listSong = new ArrayList<>();
@@ -37,6 +39,13 @@ public class ListViewDownActivity extends AppCompatActivity {
 
         SongDownAdapter adapter = new SongDownAdapter(this, R.layout.layout_listview_down, listSong);
         listView.setAdapter(adapter);
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
     }
 }
