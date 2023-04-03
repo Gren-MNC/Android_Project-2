@@ -8,6 +8,11 @@
         android:layout_height="350dp"
         android:padding="20dp"
         android:background="@drawable/teayang">
+        <Button
+            android:id="@+id/btn_back_singer"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/ic_back"/>
         <TextView
             android:id="@+id/view_name"
             android:layout_width="match_parent"

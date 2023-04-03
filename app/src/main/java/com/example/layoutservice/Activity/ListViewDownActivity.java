@@ -1,18 +1,14 @@
 package com.example.layoutservice.Activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.layoutservice.Activity.ListenToMusicActivity;
 import com.example.layoutservice.Adapter.SongDownAdapter;
-import com.example.layoutservice.Adapter.SongFavoriteAdapter;
 import com.example.layoutservice.R;
 import com.example.layoutservice.Song;
 

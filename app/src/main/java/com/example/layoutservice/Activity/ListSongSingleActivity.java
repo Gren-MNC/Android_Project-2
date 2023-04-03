@@ -1,39 +1,27 @@
 package com.example.layoutservice.Activity;
 
-import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.layoutservice.Adapter.ListSongSingleAdapter;
-import com.example.layoutservice.Adapter.SongFavoriteAdapter;
 import com.example.layoutservice.MyService;
 import com.example.layoutservice.R;
 import com.example.layoutservice.Song;
@@ -47,8 +35,7 @@ public class ListSongSingleActivity extends AppCompatActivity {
     private static final int MY_PERMISSION_REQUEST = 1;
     ArrayList<String> arrayList;
     private ListView listView;
-    private Button btnStart;
-    private Button btnStop;
+    private Button btnStart,btnStop, btnBack;
     private Song mSong;
     private ImageView imgPauseOrPlay;
     private ImageView imgCancel, imgSong;
@@ -74,6 +61,7 @@ public class ListSongSingleActivity extends AppCompatActivity {
     };
 
 
+    @SuppressLint("MissingInflatedId")
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +75,7 @@ public class ListSongSingleActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rcv_data);
         tvSong = findViewById(R.id.tv_song);
         tvSingle = findViewById(R.id.tv_single);
+        btnBack = findViewById(R.id.btn_back_singer);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
@@ -95,6 +84,12 @@ public class ListSongSingleActivity extends AppCompatActivity {
         listSongSingleAdapter = new ListSongSingleAdapter(this,getListUser());
         recyclerView.setAdapter(listSongSingleAdapter);
 
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
 
     }
@@ -104,10 +99,10 @@ public class ListSongSingleActivity extends AppCompatActivity {
 
     private ArrayList<Song> getListUser() {
         ArrayList<Song> list = new ArrayList<>();
-        list.add(new Song("Let her go","Single",R.drawable.eyenoselips,R.raw.lethergo));
-        list.add(new Song("Muon roi ma sao con","Single",R.drawable.ic_music,R.raw.muonroimasaocon_sontungmtp));
-        list.add(new Song("Neu luc do","Single",R.drawable.ic_music,R.raw.neulucdo_tlinh));
-        list.add(new Song("Ngu mot minh","Single",R.drawable.ic_music,R.raw.ngumotminh_hieuthuhai));
+        list.add(new Song("Let her go","Single", R.drawable.eyenoselips, R.raw.lethergo));
+        list.add(new Song("Muon roi ma sao con","Single", R.drawable.ic_music, R.raw.muonroimasaocon_sontungmtp));
+        list.add(new Song("Neu luc do","Single", R.drawable.ic_music, R.raw.neulucdo_tlinh));
+        list.add(new Song("Ngu mot minh","Single", R.drawable.ic_music, R.raw.ngumotminh_hieuthuhai));
         return list;
     }
 

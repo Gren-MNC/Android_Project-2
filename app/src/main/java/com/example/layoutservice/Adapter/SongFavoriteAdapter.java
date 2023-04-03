@@ -9,14 +9,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.layoutservice.Activity.ListenToMusicActivity;
 import com.example.layoutservice.R;
 import com.example.layoutservice.Song;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SongFavoriteAdapter extends BaseAdapter {
     private Context context;
