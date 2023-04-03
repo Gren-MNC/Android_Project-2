@@ -12,13 +12,14 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:paddingTop="10dp"
-        android:paddingLeft="10dp"/>
+        android:paddingLeft="10dp"
+        android:background="@color/purple_200"/>
     <RelativeLayout
         android:id="@+id/relativeChuDeTheLoai"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvTitleThuvien"
-
+        android:background="@color/purple_200"
         android:padding="10dp">
         <LinearLayout
             android:id="@+id/bai_hat_yeu_thich"
@@ -35,6 +36,7 @@
                 android:id="@+id/frameLayoutAllPlayList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
                 android:layout_gravity="center">
 
                 <ImageView
@@ -42,7 +44,7 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:scaleType="centerCrop"
-                    android:src="@mipmap/ic_launcher_round" />
+                    android:src="@drawable/favorite_songs" />
             </FrameLayout>
 
             <TextView
@@ -82,7 +84,7 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:scaleType="centerCrop"
-                    android:src="@mipmap/ic_launcher_round" />
+                    android:src="@drawable/icon_download" />
             </FrameLayout>
 
             <TextView
@@ -122,7 +124,7 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:scaleType="centerCrop"
-                    android:src="@mipmap/ic_launcher_round" />
+                    android:src="@drawable/favorite_singer" />
             </FrameLayout>
 
             <TextView
