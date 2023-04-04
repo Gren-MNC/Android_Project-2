@@ -1,5 +1,6 @@
 package com.example.layoutservice.Activity;
 
+import static com.example.layoutservice.MyService.ACTION_CLEAR;
 import static com.example.layoutservice.MyService.ACTION_NEXT;
 import static com.example.layoutservice.MyService.ACTION_PAUSE;
 import static com.example.layoutservice.MyService.ACTION_PRE;
@@ -24,7 +25,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.example.layoutservice.MyService;
 import com.example.layoutservice.R;
 import com.example.layoutservice.Receiver.BroadcastReceiver;
-import com.example.layoutservice.Song;
+import com.example.layoutservice.Models.Song;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -55,7 +56,7 @@ public class ListenToMusicActivity extends AppCompatActivity {
             if (bundle == null){
                 return;
             }
-            actionService = bundle.getInt("action_to_activity");
+            actionService = bundle.getInt("action_music");
             handleActionFromService(actionService);
 
         }
@@ -68,6 +69,9 @@ public class ListenToMusicActivity extends AppCompatActivity {
                 mediaPlayer.pause();
                 isPlaying = false;
                 btnPlay.setBackgroundResource(R.drawable.ic_play_main);
+                break;
+            case ACTION_CLEAR:
+                mediaPlayer.stop();
                 break;
 
             case ACTION_RESUME:

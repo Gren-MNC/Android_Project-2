@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.layoutservice.Adapter.ListSongSingleAdapter;
 import com.example.layoutservice.MyService;
 import com.example.layoutservice.R;
-import com.example.layoutservice.Song;
+import com.example.layoutservice.Models.Song;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,6 +90,17 @@ public class ListSongSingleActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ListSongSingleActivity.this, ListenToMusicActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("object_song",mSong);
+                sendActionToService(MyService.ACTION_RESUME);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
 
 
     }
@@ -147,6 +158,7 @@ public class ListSongSingleActivity extends AppCompatActivity {
         imgSong.setImageResource(mSong.getImage());
         tvSong.setText(mSong.getTitle());
         tvSingle.setText(mSong.getSinger());
+        imgPauseOrPlay.setImageResource(R.drawable.ic_pause);
 
         imgPauseOrPlay.setOnClickListener(new View.OnClickListener() {
             @Override

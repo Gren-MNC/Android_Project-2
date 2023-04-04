@@ -14,9 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.layoutservice.Activity.ListenToMusicActivity;
-import com.example.layoutservice.MyService;
 import com.example.layoutservice.R;
-import com.example.layoutservice.Song;
+import com.example.layoutservice.Models.Song;
 
 import java.util.ArrayList;
 
@@ -65,14 +64,6 @@ public class ListSongSingleAdapter extends RecyclerView.Adapter<ListSongSingleAd
         });
     }
 
-    private void clickStarService() {
-        Song song = new Song("Eye nose lips","Teayang",R.drawable.eyenoselips, R.raw.lethergo);
-        Intent intent = new Intent(context, MyService.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("object_song",song);
-        intent.putExtras(bundle);
-        context.startService(intent);
-    }
     @Override
     public int getItemCount() {
         if(songList != null)

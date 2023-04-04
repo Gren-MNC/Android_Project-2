@@ -16,6 +16,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.layoutservice.Activity.ListenToMusicActivity;
+import com.example.layoutservice.Models.Song;
 import com.example.layoutservice.Receiver.BroadcastReceiver;
 
 public class MyService extends Service {
@@ -55,9 +56,7 @@ public class MyService extends Service {
             }
         }
         actionService = intent.getIntExtra("action_music_service", 0);
-        if (actionService != 0){
-            handleActionMusic(actionService);
-        }
+        handleActionMusic(actionService);
         return START_NOT_STICKY;
     }
     private void handleActionMusic(int action)
@@ -83,12 +82,16 @@ public class MyService extends Service {
             case ACTION_PRE:
                 preMusic();
                 break;
-
+            case ACTION_CLEAR:
+                stopSelf();
+                sendActionToActivity(ACTION_CLEAR);
+                break;
         }
     }
     private  void startMusic(){
         isPlaying = true;
         sendNotification(mSong);
+        sendActionToActivity(ACTION_START);
     }
     private void pauseMusic() {
         if(isPlaying == true){
@@ -140,7 +143,7 @@ public class MyService extends Service {
         }
         remoteViews.setOnClickPendingIntent(R.id.btn_pre, getPendingIntent(this,ACTION_PRE));
         remoteViews.setOnClickPendingIntent(R.id.btn_next, getPendingIntent(this,ACTION_NEXT));
-
+        remoteViews.setOnClickPendingIntent(R.id.img_cancel,getPendingIntent(this,ACTION_CLEAR));
 
         Notification notification = new NotificationCompat.Builder(this,Chanel_ID)
                 .setSmallIcon(R.drawable.ic_home)
@@ -152,7 +155,7 @@ public class MyService extends Service {
     }
     private PendingIntent getPendingIntent(Context context, int action) {
         Intent intent = new Intent(this, BroadcastReceiver.class);
-        intent.putExtra("action_from_service",action);
+        intent.putExtra("action_music",action);
 
         return PendingIntent.getBroadcast(context.getApplicationContext(), action,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -171,8 +174,9 @@ public class MyService extends Service {
     private void sendActionToActivity(int action){
         Intent intent = new Intent("send_data_to_activity");
         Bundle bundle = new Bundle();
-        bundle.putInt("action_to_activity",action);
-
+        bundle.putInt("action_music",action);
+        bundle.putSerializable("object_song",mSong);
+        bundle.putBoolean("status_music",isPlaying);
         intent.putExtras(bundle);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
