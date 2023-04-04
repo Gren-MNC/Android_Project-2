@@ -1,4 +1,4 @@
-package com.example.layoutservice;
+package com.example.layoutservice.Models;
 
 import java.io.Serializable;
 

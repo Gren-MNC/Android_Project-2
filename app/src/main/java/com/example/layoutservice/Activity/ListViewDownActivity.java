@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.layoutservice.Adapter.SongDownAdapter;
 import com.example.layoutservice.R;
-import com.example.layoutservice.Song;
+import com.example.layoutservice.Models.Song;
 
 import java.util.ArrayList;
 

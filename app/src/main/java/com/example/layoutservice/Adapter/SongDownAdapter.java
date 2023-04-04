@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.example.layoutservice.Activity.ListenToMusicActivity;
 import com.example.layoutservice.R;
-import com.example.layoutservice.Song;
+import com.example.layoutservice.Models.Song;
 
 import java.util.ArrayList;
 
