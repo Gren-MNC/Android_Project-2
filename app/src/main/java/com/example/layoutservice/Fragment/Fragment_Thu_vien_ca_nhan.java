@@ -1,7 +1,5 @@
 package com.example.layoutservice.Fragment;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -15,7 +13,6 @@ import android.widget.LinearLayout;
 import com.example.layoutservice.Activity.ListSongSingleActivity;
 import com.example.layoutservice.Activity.ListViewDownActivity;
 import com.example.layoutservice.Activity.ListViewFavoriteActivity;
-import com.example.layoutservice.Activity.MainActivity;
 import com.example.layoutservice.R;
 
 

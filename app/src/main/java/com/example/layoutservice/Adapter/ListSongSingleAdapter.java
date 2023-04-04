@@ -6,11 +6,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,7 +19,6 @@ import com.example.layoutservice.R;
 import com.example.layoutservice.Song;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ListSongSingleAdapter extends RecyclerView.Adapter<ListSongSingleAdapter.ListSongSingleHolder> {
     private ArrayList<Song> songList;
