@@ -1,5 +1,6 @@
 package com.example.layoutservice.Activity;
 
+import static android.view.animation.Animation.INFINITE;
 import static com.example.layoutservice.MyService.ACTION_CLEAR;
 import static com.example.layoutservice.MyService.ACTION_NEXT;
 import static com.example.layoutservice.MyService.ACTION_PAUSE;
@@ -7,9 +8,11 @@ import static com.example.layoutservice.MyService.ACTION_PRE;
 import static com.example.layoutservice.MyService.ACTION_RESUME;
 import static com.example.layoutservice.MyService.ACTION_START;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,11 +34,8 @@ import com.example.layoutservice.Receiver.BroadcastReceiver;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class ListenToMusicActivity extends AppCompatActivity {
-
-    Random random = new Random();
+public class ListenToMusicActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener{
     static Uri uri;
-
     private static final int REPEAT_ONE = 1;
     private static final int REPEAT_ALL = 2;
     private int repeat = REPEAT_ALL;
@@ -44,12 +44,14 @@ public class ListenToMusicActivity extends AppCompatActivity {
     TextView tvName, tvSinger, tvStart, tvStop;
     ArrayList<MusicFiles> listSong;
     private MusicFiles mSong;
-    private int positionSelect, positionRandom;
-    SeekBar seekMusic;
+    private int positionSelect;
+    SeekBar seekMusic, seekVolume;
     private int actionService, mCurrentPosition, durationTotal;
     private boolean isPlaying;
     static MediaPlayer mediaPlayer = new MediaPlayer();
     private ImageView imgViewMusic;
+    private ObjectAnimator animator;
+    private AudioManager audioManager;
     private Handler handler = new Handler();
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver(){
         @Override
@@ -69,6 +71,7 @@ public class ListenToMusicActivity extends AppCompatActivity {
         {
             case ACTION_PAUSE:
                 mediaPlayer.pause();
+                animator.pause();
                 isPlaying = false;
                 btnPlay.setBackgroundResource(R.drawable.ic_play_main);
                 break;
@@ -78,6 +81,7 @@ public class ListenToMusicActivity extends AppCompatActivity {
 
             case ACTION_RESUME:
                 mediaPlayer.start();
+                animator.resume();
                 isPlaying = true;
                 btnPlay.setBackgroundResource(R.drawable.ic_pause_main);
                 break;
@@ -100,6 +104,7 @@ public class ListenToMusicActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
                 new IntentFilter("send_data_to_activity"));
 
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         btnPlay = findViewById(R.id.btn_play_main);
         btnNext = findViewById(R.id.btn_next_main);
@@ -115,32 +120,54 @@ public class ListenToMusicActivity extends AppCompatActivity {
         tvStop = findViewById(R.id.tv_time1);
 
         seekMusic = findViewById(R.id.seekbar);
+        seekVolume = findViewById(R.id.seekbar_volume);
         imgViewMusic = findViewById(R.id.img_music);
 
         getIntentMethod();
+        startMusic(mSong);
+        RotationAnimation(imgViewMusic);
+        animator.start();
 
         tvName.setText(mSong.getTitle());
         tvSinger.setText(mSong.getArtist());
 
-        startMusic(mSong);
         clickStartService(ACTION_START);
 
         btnPlay.setBackgroundResource(R.drawable.ic_pause_main);
 
         durationTotal = mediaPlayer.getDuration() / 1000;
         tvStop.setText(formatTime(durationTotal));
+
+        mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 seekMusic.setMax(mediaPlayer.getDuration() / 1000);
                 mediaPlayer.start();
-
-                /*if (durationTotal == mCurrentPosition){
-                    btnNext.performClick();
-                }*/
             }
         });
 
+        int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        seekVolume.setMax(maxVolume);
+        seekVolume.setProgress(currentVolume);
+
+        seekVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
         seekMusic.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -170,30 +197,24 @@ public class ListenToMusicActivity extends AppCompatActivity {
                 handler.postDelayed(this, 500);
             }
         });
-        /*if (mediaPlayer != null){
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    playNextMusic();
-                }
-            });
-        }*/
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // pause
                 if(isPlaying == true){
                     mediaPlayer.pause();
-                    isPlaying = false;
                     clickStartService(ACTION_PAUSE);
+                    isPlaying = false;
+                    animator.pause();
                     btnPlay.setBackgroundResource(R.drawable.ic_play_main);
                 }
                 // resume
                 else {
                     mediaPlayer.start();
-                    isPlaying = true;
                     clickStartService(ACTION_RESUME);
                     btnPlay.setBackgroundResource(R.drawable.ic_pause_main);
+                    animator.resume();
+                    isPlaying = true;
                 }
 
             }
@@ -201,44 +222,17 @@ public class ListenToMusicActivity extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //if (repeat == REPEAT_ALL){
                 playNextMusic();
+                animator.start();
                 btnPlay.setBackgroundResource(R.drawable.ic_pause_main);
-
-                /*}
-                else if(repeat == REPEAT_ONE){
-                    startMusic(mSong);
-                    btnPlay.setBackgroundResource(R.drawable.ic_pause_main);
-                }*/
-                /*else if (shuffle == true && repeat == REPEAT_ALL){
-                    positionRandom = positionSelect;
-                    while (positionRandom == positionSelect){
-                        positionRandom = random.nextInt(listSong.size());
-                    }
-                    mSong = listSong.get(positionRandom);
-                    startMusic(mSong);
-                    clickStartService(ACTION_START);
-                    tvName.setText(mSong.getTitle());
-                    tvSinger.setText(mSong.getSinger());
-                    int durationTotal = mediaPlayer.getDuration() / 1000;
-                    tvStop.setText(formatTime(durationTotal));
-                    btnPlay.setBackgroundResource(R.drawable.ic_pause_main);
-                }*/
             }
         });
         btnPre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                positionSelect = ((positionSelect-1)<0) ? (listSong.size()-1):(positionSelect-1);
-                mSong = listSong.get(positionSelect);
-                startMusic(mSong);
-                clickStartService(ACTION_START);
-                tvName.setText(mSong.getTitle());
-                tvSinger.setText(mSong.getArtist());
+                playPreMusic();
+                animator.start();
                 btnPlay.setBackgroundResource(R.drawable.ic_pause_main);
-                int durationTotal = mediaPlayer.getDuration() / 1000;
-                tvStop.setText(formatTime(durationTotal));
-
             }
         });
         btnList.setOnClickListener(new View.OnClickListener() {
@@ -290,7 +284,13 @@ public class ListenToMusicActivity extends AppCompatActivity {
     }
 
     private void playNextMusic() {
-        positionSelect = (positionSelect+1) % listSong.size();
+        if (shuffle == true && repeat == REPEAT_ALL) {
+            positionSelect= getRandom(listSong.size()-1);
+        }
+        else if (shuffle == false && repeat == REPEAT_ALL){
+            positionSelect = (positionSelect+1) % listSong.size();
+        }
+
         mSong = listSong.get(positionSelect);
         startMusic(mSong);
         clickStartService(ACTION_START);
@@ -299,8 +299,32 @@ public class ListenToMusicActivity extends AppCompatActivity {
 
         int durationTotal = mediaPlayer.getDuration() / 1000;
         tvStop.setText(formatTime(durationTotal));
+
+        mediaPlayer.setOnCompletionListener(this);
     }
 
+    private int getRandom(int i) {
+        Random random = new Random();
+        return random.nextInt(i+1);
+    }
+
+    private void playPreMusic(){
+        if (shuffle == true && repeat == REPEAT_ALL) {
+            positionSelect= getRandom(listSong.size()-1);
+        }
+        else if (shuffle == false && repeat == REPEAT_ALL){
+            positionSelect = ((positionSelect-1)<0) ? (listSong.size()-1):(positionSelect-1);
+        }
+        mSong = listSong.get(positionSelect);
+        startMusic(mSong);
+        clickStartService(ACTION_START);
+        tvName.setText(mSong.getTitle());
+        tvSinger.setText(mSong.getArtist());
+        int durationTotal = mediaPlayer.getDuration() / 1000;
+        tvStop.setText(formatTime(durationTotal));
+
+        mediaPlayer.setOnCompletionListener(this);
+    }
     private void getIntentMethod(){
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
@@ -314,9 +338,9 @@ public class ListenToMusicActivity extends AppCompatActivity {
                 mediaPlayer.stop();
                 mediaPlayer.release();
             }
-            uri = Uri.parse(listSong.get(positionSelect).getPath());
+            uri = Uri.parse(mSong.getPath());
             mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
-            mediaPlayer.start();
+
         }
     }
     private void clickStartService(int actionMusic) {
@@ -329,13 +353,13 @@ public class ListenToMusicActivity extends AppCompatActivity {
         startService(intent);
 
     }
-    private void startMusic(MusicFiles song) {
+    private void startMusic(MusicFiles mSong) {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();
         }
 
-        uri  = Uri.parse(listSong.get(positionSelect).getPath());
+        uri  = Uri.parse(mSong.getPath());
         mediaPlayer = MediaPlayer.create(getApplicationContext(),uri);
 
         mediaPlayer.start();
@@ -356,6 +380,18 @@ public class ListenToMusicActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        playNextMusic();
+        mediaPlayer.setOnCompletionListener(this);
+    }
+    private void RotationAnimation(View view){
+
+        animator  = ObjectAnimator.ofFloat(imgViewMusic, "rotation", 0f, 360f);
+        animator.setDuration(10000);
+        animator.setRepeatCount(INFINITE);
+
+    }
 }
 
 
