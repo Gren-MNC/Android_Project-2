@@ -18,6 +18,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:paddingTop="10dp"
+            android:textColor="#ffff"
             android:paddingLeft="10dp"/>
         <ListView
             android:id="@+id/listViewPlayList"

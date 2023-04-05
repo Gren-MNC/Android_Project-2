@@ -11,15 +11,14 @@
         android:text="Thư viện"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:textColor="#ffff"
         android:paddingTop="10dp"
-        android:paddingLeft="10dp"
-        android:background="@color/purple_200"/>
+        android:paddingLeft="10dp"/>
     <RelativeLayout
         android:id="@+id/relativeChuDeTheLoai"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvTitleThuvien"
-        android:background="@color/purple_200"
         android:padding="10dp">
         <LinearLayout
             android:id="@+id/bai_hat_yeu_thich"
@@ -58,6 +57,7 @@
                 android:maxLines="2"
                 android:textAlignment="center"
                 android:text="Bài hát yêu thích"
+                android:textColor="#ffff"
                 android:textSize="15sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -99,6 +99,7 @@
                 android:text="Bài hát đã tải"
                 android:textAlignment="center"
                 android:textSize="15sp"
+                android:textColor="#ffff"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -138,6 +139,7 @@
                 android:maxLines="2"
                 android:text="Ca sĩ yêu thích"
                 android:textAlignment="center"
+                android:textColor="#ffff"
                 android:textSize="15sp"
                 android:textStyle="bold" />
         </LinearLayout>

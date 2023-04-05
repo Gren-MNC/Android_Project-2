@@ -6,24 +6,25 @@
     android:id="@+id/fragment_thu_vien"
     android:layout_height="match_parent"
     android:scrollbars="none"
+    android:background="@drawable/background"
     android:fillViewport="true">
     <LinearLayout
         android:orientation="vertical"
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <fragment
-            android:id="@+id/fragmentTimKiem"
-            android:name="com.example.layoutservice.Fragment.Fragment_Tim_Kiem"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            tools:layout="@layout/fragment_tim_kiem" />
-        <fragment
-            android:id="@+id/fragmentBanner"
-            android:name="com.example.layoutservice.Fragment.FragmentBanner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_banner" />
+<!--        <fragment-->
+<!--            android:id="@+id/fragmentTimKiem"-->
+<!--            android:name="com.example.layoutservice.Fragment.Fragment_Tim_Kiem"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="48dp"-->
+<!--            tools:layout="@layout/fragment_tim_kiem" />-->
+<!--        <fragment-->
+<!--            android:id="@+id/fragmentBanner"-->
+<!--            android:name="com.example.layoutservice.Fragment.FragmentBanner"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            tools:layout="@layout/fragment_banner" />-->
         <fragment
             android:id="@+id/fragment_lib"
             android:name="com.example.layoutservice.Fragment.Fragment_Thu_vien_ca_nhan"

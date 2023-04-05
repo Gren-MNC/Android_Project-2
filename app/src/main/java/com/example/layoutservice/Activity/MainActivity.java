@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.layout_activity_main);
 
 
-        ViewPager2 viewPager2 = findViewById(R.id.viewPager);
+        ViewPager2 viewPager2 = findViewById(R.id.viewPager2);
         viewPager2.setAdapter(new ViewPagerAdapter(this));
 
         TabLayout tabLayout = findViewById(R.id.tabLayout);
@@ -37,12 +37,12 @@ public class MainActivity extends AppCompatActivity {
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                 switch (position) {
                     case 0: {
-                        tab.setText("Trang chủ");
+//                        tab.setText("Trang chủ");
                         tab.setIcon(R.drawable.ic_home);
                         break;
                     }
                     case 1: {
-                        tab.setText("Khám phá");
+//                        tab.setText("Khám phá");
                         tab.setIcon(R.drawable.ic_discover);
                         break;
                     }

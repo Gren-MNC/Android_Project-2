@@ -13,6 +13,7 @@
             android:layout_height="wrap_content"
             android:text="Chủ đề và thể loại"
             android:textSize="20sp"
+            android:textColor="#ffff"
             android:textStyle="bold"/>
         <TextView
             android:id="@+id/tvXemThemChuDeTheLoai"
@@ -20,7 +21,7 @@
             android:layout_height="wrap_content"
             android:text="xem thêm"
             android:textSize="15sp"
-            android:textColor="@color/purple_500"
+            android:textColor="#ffff"
             android:layout_alignParentRight="true" />
     </RelativeLayout>
     <HorizontalScrollView

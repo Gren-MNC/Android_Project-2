@@ -15,12 +15,13 @@
             android:layout_height="wrap_content"
             android:text="Album Hot"
             android:textStyle="bold"
+            android:textColor="#ffff"
             android:textSize="20sp"/>
         <TextView
             android:id="@+id/tvXemThemAlbum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/purple_500"
+            android:textColor="#ffff"
             android:layout_alignParentRight="true"
             android:textSize="15sp"
             android:text="xem thêm" />
