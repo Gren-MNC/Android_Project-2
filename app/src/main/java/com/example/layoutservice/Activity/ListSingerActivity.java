@@ -2,16 +2,11 @@ package com.example.layoutservice.Activity;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,27 +20,23 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.layoutservice.Adapter.ListSongSingleAdapter;
-import com.example.layoutservice.Adapter.MusicFileAdapter;
+import com.example.layoutservice.Adapter.SingerAdapter;
 import com.example.layoutservice.Models.MusicFiles;
-import com.example.layoutservice.MyService;
+import com.example.layoutservice.Models.Singer;
 import com.example.layoutservice.R;
-import com.example.layoutservice.Receiver.BroadcastReceiver;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListViewDownActivity extends AppCompatActivity {
+public class ListSingerActivity extends AppCompatActivity {
     private List<MusicFiles> listSong = new ArrayList<>();
     public static final int REQUEST_CODE = 1;
-    ArrayList<MusicFiles> musicFiles;
+    ArrayList<Singer> singers;
     ArrayAdapter<String> adapter;
     private static final int MY_PERMISSION_REQUEST = 1;
     ArrayList<String> arrayList;
@@ -60,32 +51,23 @@ public class ListViewDownActivity extends AppCompatActivity {
     private boolean isPlaying;
     private RecyclerView recyclerView;
     private ListSongSingleAdapter listSongSingleAdapter;
-    private MusicFileAdapter musicFileAdapter;
+    private SingerAdapter singerAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_list_download);
+        setContentView(R.layout.layout_listview_singer);
         permission();
-        // LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter("send_data_to_activity"));
-
-        btnBack = findViewById(R.id.btn_back_down);
-        recyclerView = findViewById(R.id.rcv_data_down);
+       // LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter("send_data_to_activity"));
+        recyclerView = findViewById(R.id.rcv_data);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(itemDecoration);
 
 
-        musicFileAdapter = new MusicFileAdapter(this,musicFiles);
-        recyclerView.setAdapter(musicFileAdapter);
-
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        singerAdapter = new SingerAdapter(this,singers);
+        recyclerView.setAdapter(singerAdapter);
 
     }
 
@@ -97,11 +79,11 @@ public class ListViewDownActivity extends AppCompatActivity {
         if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED)
         {
-            ActivityCompat.requestPermissions(ListViewDownActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
+            ActivityCompat.requestPermissions(ListSingerActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
         }
         else {
             Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
-            musicFiles = getAllAudio(this);
+            singers = getAllAudio(this);
         }
     }
 
@@ -112,41 +94,35 @@ public class ListViewDownActivity extends AppCompatActivity {
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
                 Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
-                musicFiles = getAllAudio(this);
+                singers = getAllAudio(this);
             }
             else {
-                ActivityCompat.requestPermissions(ListViewDownActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
+                ActivityCompat.requestPermissions(ListSingerActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
             }
         }
     }
-    public static ArrayList<MusicFiles> getAllAudio(Context context){
-        ArrayList<MusicFiles> tempAudioList = new ArrayList<>();
+    public static ArrayList<Singer> getAllAudio(Context context){
+        ArrayList<Singer> tempSingerList = new ArrayList<>();
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String[] projection = {
-                MediaStore.Audio.Media.ALBUM,
-                MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.DURATION,
-                MediaStore.Audio.Media.DATA,
-                MediaStore.Audio.Media.ARTIST
+                MediaStore.Audio.Media.ARTIST_ID,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.DATA
         };
         Cursor cursor = context.getContentResolver().query(uri,projection,null,null,null);
         if(cursor != null)
         {
             while (cursor.moveToNext()){
-                String album = cursor.getString(0);
-                String title = cursor.getString(1);
-                String duration = cursor.getString(2);
-                String path = cursor.getString(3);
-                String artist = cursor.getString(4);
+                int id_artist = cursor.getInt(0);
+                String artist = cursor.getString(1);
+                String path = cursor.getString(2);
 
-                MusicFiles musicFiles = new MusicFiles(path,title,artist,album,duration);
-                Log.e("Path: "+path,"Album: "+album);
-                tempAudioList.add(musicFiles);
+                Singer singer = new Singer(id_artist,artist, path);
+                tempSingerList.add(singer);
             }
             cursor.close();
         }
-        return tempAudioList;
+        return tempSingerList;
     }
-
 
 }

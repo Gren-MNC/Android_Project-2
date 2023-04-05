@@ -15,15 +15,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.layoutservice.Activity.ListSingerActivity;
+import com.example.layoutservice.Activity.ListSongSingleActivity;
 import com.example.layoutservice.Activity.ListenToMusicActivity;
 import com.example.layoutservice.Models.MusicFiles;
+import com.example.layoutservice.Models.Singer;
 import com.example.layoutservice.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class SongDownAdapter extends RecyclerView.Adapter<SongDownAdapter.SongDownHolder> {
-    private ArrayList<MusicFiles> musicFilesArrayList;
+public class SingerAdapter extends RecyclerView.Adapter<SingerAdapter.SingerHolder> {
+    private ArrayList<Singer> listSinger;
     private Context context;
 
     private int idLayout;
@@ -32,20 +35,16 @@ public class SongDownAdapter extends RecyclerView.Adapter<SongDownAdapter.SongDo
 
     @NonNull
     @Override
-    public SongDownHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_sub_single, parent,false);
-        return new SongDownHolder(view);
+    public SingerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_sub_singer, parent,false);
+        return new SingerHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SongDownHolder holder, int position) {
-        MusicFiles mFiles = musicFilesArrayList.get(position);
-        if(mFiles == null){
-            return;
-        }
-        holder.txtSong.setText(mFiles.getTitle());
-        holder.txtSingle.setText(mFiles.getArtist());
-        byte[] image = getAlbumArt(mFiles.getPath());
+    public void onBindViewHolder(@NonNull SingerHolder holder, int position) {
+        Singer mSinger = listSinger.get(position);
+        holder.txtArtist.setText(mSinger.getName());
+        byte[] image = getAlbumArt(mSinger.getPath());
         if(image != null){
             Glide.with(context).asBitmap()
                     .load(image)
@@ -56,50 +55,43 @@ public class SongDownAdapter extends RecyclerView.Adapter<SongDownAdapter.SongDo
                     .load(R.drawable.ic_music)
                     .into(holder.imgAva);
         }
+
         holder.layout_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                positionSelect = holder.getAdapterPosition();
-
-                Intent intent = new Intent(context, ListenToMusicActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("object_song",mFiles);
-                bundle.putSerializable("listSong_key", musicFilesArrayList);
-                bundle.putInt("position_key", positionSelect);
-                intent.putExtras(bundle);
+                Intent intent = new Intent(context, ListSongSingleActivity.class);
                 context.startActivity(intent);
             }
         });
     }
 
-    public SongDownAdapter(Context context,ArrayList<MusicFiles> musicFilesArrayList){
-        this.musicFilesArrayList = musicFilesArrayList;
+    public SingerAdapter(Context context,ArrayList<Singer> listSinger){
+        this.listSinger = listSinger;
         this.context = context;
     }
 
 
     @Override
     public int getItemCount() {
-        if(musicFilesArrayList != null)
+        if(listSinger != null)
         {
-            return musicFilesArrayList.size();
+            return listSinger.size();
         }
         return 0;
     }
 
-    public class SongDownHolder extends RecyclerView.ViewHolder{
+    public class SingerHolder extends RecyclerView.ViewHolder{
 
 
         private ImageView imgAva;
-        private TextView txtSong;
+        private TextView txtArtist;
         private TextView txtSingle;
         private RelativeLayout layout_item;
-        public SongDownHolder(@NonNull View v){
+        public SingerHolder(@NonNull View v){
             super(v);
 
             layout_item = v.findViewById(R.id.layout_item_song_single);
-            txtSingle = v.findViewById(R.id.tv_single);
-            txtSong = v.findViewById(R.id.tv_song);
+            txtArtist = v.findViewById(R.id.tv_artist);
             imgAva = v.findViewById(R.id.img_song);
 
         }

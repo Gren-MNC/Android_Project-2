@@ -168,9 +168,11 @@ public class MyService extends Service {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,Chanel_ID)
                 .setSmallIcon(R.drawable.ic_music)
                 .setSubText("Name App")
+                .setLargeIcon(bitmap)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentTitle(mSong.getTitle())
                 .setContentText(mSong.getArtist())
-                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap).bigLargeIcon(null))
+                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap).bigLargeIcon(bitmap))
                 .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
                         .setShowActionsInCompactView(0,1,2 /* #1: pause button */)
                         .setMediaSession(mediaSessionCompat.getSessionToken()));
@@ -188,7 +190,8 @@ public class MyService extends Service {
                     .addAction(R.drawable.ic_play2,"Pause",getPendingIntent(this,ACTION_RESUME))
                     .addAction(R.drawable.ic_next,"Next",getPendingIntent(this,ACTION_NEXT));
         }
-        Notification notification = notificationBuilder.build();
+        Notification notification = notificationBuilder
+                .setPriority(NotificationCompat.PRIORITY_MAX).build();
         startForeground(1,notification);
     }
     private PendingIntent getPendingIntent(Context context, int action) {

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.example.layoutservice.Activity.ListSingerActivity;
 import com.example.layoutservice.Activity.ListSongSingleActivity;
 import com.example.layoutservice.Activity.ListViewDownActivity;
 import com.example.layoutservice.Activity.ListViewFavoriteActivity;
@@ -39,7 +40,7 @@ public class Fragment_Thu_vien_ca_nhan extends Fragment {
         });
         btnListFavoriteSinger = view.findViewById(R.id.favorite_singer);
         btnListFavoriteSinger.setOnClickListener(view13 -> {
-            Intent intent = new Intent(getActivity(), ListSongSingleActivity.class);
+            Intent intent = new Intent(getActivity(), ListSingerActivity.class);
             startActivity(intent);
         });
         return view;

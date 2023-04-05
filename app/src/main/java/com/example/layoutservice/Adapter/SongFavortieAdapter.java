@@ -22,7 +22,7 @@ import com.example.layoutservice.R;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class SongDownAdapter extends RecyclerView.Adapter<SongDownAdapter.SongDownHolder> {
+public class SongFavortieAdapter extends RecyclerView.Adapter<SongFavortieAdapter.SongFavoriteHolder> {
     private ArrayList<MusicFiles> musicFilesArrayList;
     private Context context;
 
@@ -32,13 +32,13 @@ public class SongDownAdapter extends RecyclerView.Adapter<SongDownAdapter.SongDo
 
     @NonNull
     @Override
-    public SongDownHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SongFavoriteHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_sub_single, parent,false);
-        return new SongDownHolder(view);
+        return new SongFavoriteHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SongDownHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SongFavoriteHolder holder, int position) {
         MusicFiles mFiles = musicFilesArrayList.get(position);
         if(mFiles == null){
             return;
@@ -72,7 +72,7 @@ public class SongDownAdapter extends RecyclerView.Adapter<SongDownAdapter.SongDo
         });
     }
 
-    public SongDownAdapter(Context context,ArrayList<MusicFiles> musicFilesArrayList){
+    public SongFavortieAdapter(Context context,ArrayList<MusicFiles> musicFilesArrayList){
         this.musicFilesArrayList = musicFilesArrayList;
         this.context = context;
     }
@@ -87,14 +87,14 @@ public class SongDownAdapter extends RecyclerView.Adapter<SongDownAdapter.SongDo
         return 0;
     }
 
-    public class SongDownHolder extends RecyclerView.ViewHolder{
+    public class SongFavoriteHolder extends RecyclerView.ViewHolder{
 
 
         private ImageView imgAva;
         private TextView txtSong;
         private TextView txtSingle;
         private RelativeLayout layout_item;
-        public SongDownHolder(@NonNull View v){
+        public SongFavoriteHolder(@NonNull View v){
             super(v);
 
             layout_item = v.findViewById(R.id.layout_item_song_single);

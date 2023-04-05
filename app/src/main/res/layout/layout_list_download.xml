@@ -43,8 +43,8 @@
         android:textColor="@color/white"
         android:background="@drawable/btn_random_play2"/>
 
-    <ListView
-        android:id="@+id/list_view_download"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv_data_down"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/btn_random_play"
