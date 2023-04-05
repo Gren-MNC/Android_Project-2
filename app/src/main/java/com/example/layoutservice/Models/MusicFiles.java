@@ -1,11 +1,15 @@
 package com.example.layoutservice.Models;
 
-public class MusicFiles {
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class MusicFiles implements Serializable {
     private String path;
     private String title;
     private String artist;
     private String album;
     private String duration;
+
 
     public MusicFiles(String path, String title, String artist, String album, String duration) {
         this.path = path;

@@ -1,11 +1,16 @@
 package com.example.layoutservice.Activity;
 
-import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -13,30 +18,41 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.layoutservice.Adapter.ListSongSingleAdapter;
+import com.example.layoutservice.Adapter.MusicFileAdapter;
+import com.example.layoutservice.Models.MusicFiles;
 import com.example.layoutservice.MyService;
 import com.example.layoutservice.R;
-import com.example.layoutservice.Models.Song;
+import com.example.layoutservice.Receiver.BroadcastReceiver;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListSongSingleActivity extends AppCompatActivity {
-    private List<Song> listSong = new ArrayList<>() ;
+    private List<MusicFiles> listSong = new ArrayList<>();
+    public static final int REQUEST_CODE = 1;
+    ArrayList<MusicFiles> musicFiles;
     ArrayAdapter<String> adapter;
     private static final int MY_PERMISSION_REQUEST = 1;
     ArrayList<String> arrayList;
     private ListView listView;
-    private Button btnStart,btnStop, btnBack;
-    private Song mSong;
+    private Button btnStart,btnBack;
+    private Button btnStop;
+    private MusicFiles mSong;
     private ImageView imgPauseOrPlay;
     private ImageView imgCancel, imgSong;
     private RelativeLayout relativeLayout;
@@ -44,16 +60,16 @@ public class ListSongSingleActivity extends AppCompatActivity {
     private boolean isPlaying;
     private RecyclerView recyclerView;
     private ListSongSingleAdapter listSongSingleAdapter;
+    private MusicFileAdapter musicFileAdapter;
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
             if(bundle == null)
-            {
-                return;
+           {                return;
             }
-            mSong = (Song) bundle.get("object_song");
-            isPlaying = bundle.getBoolean("status_music");
+            mSong = (MusicFiles) bundle.get("object_song");
+           isPlaying = bundle.getBoolean("status_music");
             int action = bundle.getInt("action_music");
 
             handleLayoutMusic(action);
@@ -61,28 +77,30 @@ public class ListSongSingleActivity extends AppCompatActivity {
     };
 
 
-    @SuppressLint("MissingInflatedId")
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_single);
+        permission();
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter("send_data_to_activity"));
 
         relativeLayout = findViewById(R.id.bottom_layout);
+
+        btnBack = findViewById(R.id.btn_back_singer);
         imgPauseOrPlay = findViewById(R.id.img_pause_or_play);
         imgCancel = findViewById(R.id.img_cancel);
         imgSong = findViewById(R.id.img_song);
         recyclerView = findViewById(R.id.rcv_data);
         tvSong = findViewById(R.id.tv_song);
         tvSingle = findViewById(R.id.tv_single);
-        btnBack = findViewById(R.id.btn_back_singer);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(itemDecoration);
 
-        listSongSingleAdapter = new ListSongSingleAdapter(this,getListUser());
-        recyclerView.setAdapter(listSongSingleAdapter);
+
+        musicFileAdapter = new MusicFileAdapter(this,musicFiles);
+        recyclerView.setAdapter(musicFileAdapter);
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,31 +108,66 @@ public class ListSongSingleActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        relativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ListSongSingleActivity.this, ListenToMusicActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("object_song",mSong);
-                sendActionToService(MyService.ACTION_RESUME);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
-
 
     }
 
 
 
 
-    private ArrayList<Song> getListUser() {
-        ArrayList<Song> list = new ArrayList<>();
-        list.add(new Song("Let her go","Single", R.drawable.eyenoselips, R.raw.lethergo));
-        list.add(new Song("Muon roi ma sao con","Single", R.drawable.ic_music, R.raw.muonroimasaocon_sontungmtp));
-        list.add(new Song("Neu luc do","Single", R.drawable.ic_music, R.raw.neulucdo_tlinh));
-        list.add(new Song("Ngu mot minh","Single", R.drawable.ic_music, R.raw.ngumotminh_hieuthuhai));
-        return list;
+
+    private void permission() {
+        if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(ListSongSingleActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
+        }
+        else {
+            Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
+            musicFiles = getAllAudio(this);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE){
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
+                musicFiles = getAllAudio(this);
+            }
+            else {
+                ActivityCompat.requestPermissions(ListSongSingleActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
+            }
+        }
+    }
+    public static ArrayList<MusicFiles> getAllAudio(Context context){
+        ArrayList<MusicFiles> tempAudioList = new ArrayList<>();
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String[] projection = {
+                MediaStore.Audio.Media.ALBUM,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.ARTIST
+        };
+        Cursor cursor = context.getContentResolver().query(uri,projection,null,null,null);
+        if(cursor != null)
+        {
+            while (cursor.moveToNext()){
+                String album = cursor.getString(0);
+                String title = cursor.getString(1);
+                String duration = cursor.getString(2);
+                String path = cursor.getString(3);
+                String artist = cursor.getString(4);
+
+                MusicFiles musicFiles = new MusicFiles(path,title,artist,album,duration);
+                Log.e("Path: "+path,"Album: "+album);
+                tempAudioList.add(musicFiles);
+            }
+            cursor.close();
+        }
+        return tempAudioList;
     }
 
     @Override
@@ -155,10 +208,20 @@ public class ListSongSingleActivity extends AppCompatActivity {
         {
             return;
         }
-        imgSong.setImageResource(mSong.getImage());
+        byte[] image = getAlbumArt(mSong.getPath());
+        if(image != null){
+            Glide.with(this).asBitmap()
+                    .load(image)
+                    .into(imgSong);
+        }
+        else {
+            Glide.with(this)
+                    .load(R.drawable.ic_music)
+                    .into(imgSong);
+        }
+
         tvSong.setText(mSong.getTitle());
-        tvSingle.setText(mSong.getSinger());
-        imgPauseOrPlay.setImageResource(R.drawable.ic_pause);
+        tvSingle.setText(mSong.getArtist());
 
         imgPauseOrPlay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,6 +240,17 @@ public class ListSongSingleActivity extends AppCompatActivity {
                 sendActionToService(MyService.ACTION_CLEAR);
             }
         });
+    }
+    private byte[] getAlbumArt(String uri){
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(uri);
+        byte[] art = retriever.getEmbeddedPicture();
+        try {
+            retriever.release();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return art;
     }
 
     private void sendActionToService(int action) {

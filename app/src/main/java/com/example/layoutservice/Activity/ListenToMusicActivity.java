@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -22,10 +23,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.example.layoutservice.Models.MusicFiles;
 import com.example.layoutservice.MyService;
 import com.example.layoutservice.R;
 import com.example.layoutservice.Receiver.BroadcastReceiver;
-import com.example.layoutservice.Models.Song;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -33,6 +34,7 @@ import java.util.Random;
 public class ListenToMusicActivity extends AppCompatActivity {
 
     Random random = new Random();
+    static Uri uri;
 
     private static final int REPEAT_ONE = 1;
     private static final int REPEAT_ALL = 2;
@@ -40,8 +42,8 @@ public class ListenToMusicActivity extends AppCompatActivity {
     private boolean shuffle = false;
     Button btnPlay, btnNext, btnPre, btnList, btnBack, btnRepeat, btnShuffle;
     TextView tvName, tvSinger, tvStart, tvStop;
-    ArrayList<Song> listSong;
-    private Song mSong;
+    ArrayList<MusicFiles> listSong;
+    private MusicFiles mSong;
     private int positionSelect, positionRandom;
     SeekBar seekMusic;
     private int actionService, mCurrentPosition, durationTotal;
@@ -118,7 +120,7 @@ public class ListenToMusicActivity extends AppCompatActivity {
         getIntentMethod();
 
         tvName.setText(mSong.getTitle());
-        tvSinger.setText(mSong.getSinger());
+        tvSinger.setText(mSong.getArtist());
 
         startMusic(mSong);
         clickStartService(ACTION_START);
@@ -232,7 +234,7 @@ public class ListenToMusicActivity extends AppCompatActivity {
                 startMusic(mSong);
                 clickStartService(ACTION_START);
                 tvName.setText(mSong.getTitle());
-                tvSinger.setText(mSong.getSinger());
+                tvSinger.setText(mSong.getArtist());
                 btnPlay.setBackgroundResource(R.drawable.ic_pause_main);
                 int durationTotal = mediaPlayer.getDuration() / 1000;
                 tvStop.setText(formatTime(durationTotal));
@@ -293,7 +295,7 @@ public class ListenToMusicActivity extends AppCompatActivity {
         startMusic(mSong);
         clickStartService(ACTION_START);
         tvName.setText(mSong.getTitle());
-        tvSinger.setText(mSong.getSinger());
+        tvSinger.setText(mSong.getArtist());
 
         int durationTotal = mediaPlayer.getDuration() / 1000;
         tvStop.setText(formatTime(durationTotal));
@@ -305,14 +307,16 @@ public class ListenToMusicActivity extends AppCompatActivity {
         if(bundle != null) {
 
             positionSelect = bundle.getInt("position_key");
-            listSong = (ArrayList<Song>) bundle.getSerializable("listSong_key");
+            listSong = (ArrayList<MusicFiles>) bundle.getSerializable("listSong_key");
 
-            mSong = (Song) bundle.get("object_song");
+            mSong = (MusicFiles) bundle.get("object_song");
             if (mediaPlayer != null){
                 mediaPlayer.stop();
                 mediaPlayer.release();
             }
-            mediaPlayer = MediaPlayer.create(getApplicationContext(), mSong.getResource());
+            uri = Uri.parse(listSong.get(positionSelect).getPath());
+            mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
+            mediaPlayer.start();
         }
     }
     private void clickStartService(int actionMusic) {
@@ -325,12 +329,14 @@ public class ListenToMusicActivity extends AppCompatActivity {
         startService(intent);
 
     }
-    private void startMusic(Song song) {
+    private void startMusic(MusicFiles song) {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();
         }
-        mediaPlayer = MediaPlayer.create(getApplicationContext(), song.getResource());
+
+        uri  = Uri.parse(listSong.get(positionSelect).getPath());
+        mediaPlayer = MediaPlayer.create(getApplicationContext(),uri);
 
         mediaPlayer.start();
         isPlaying = true;

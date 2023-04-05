@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/tvTitleThuvien"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nghệ sĩ nổi bật"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:background="@color/purple_200"/>
+    <RelativeLayout
+        android:id="@+id/relativeChuDeTheLoai"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTitleThuvien"
+        android:background="@color/purple_200"
+        android:padding="10dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"/>
+    </RelativeLayout>
+</RelativeLayout>

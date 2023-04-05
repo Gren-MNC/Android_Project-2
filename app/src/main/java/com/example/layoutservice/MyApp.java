@@ -17,8 +17,6 @@ public class MyApp extends Application {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
             NotificationChannel channel = new NotificationChannel(Chanel_ID,"Chanel Service Example", NotificationManager.IMPORTANCE_DEFAULT);
-
-            channel.setSound(null, null);
             NotificationManager manager = getSystemService(NotificationManager.class);
             if(manager != null)
             {
