@@ -39,9 +39,10 @@
         <activity android:name=".Activity.ListSingerActivity"/>
         <activity android:name=".Activity.ListenToMusicActivity" />
         <activity android:name=".Activity.ListSongPlayingActivity" />
-        <activity android:name=".Activity.ListViewFavoriteActivity"/>
         <activity android:name=".Activity.ListSongSingleActivity"/>
-        <activity android:name=".Activity.ListViewDownActivity"/>
+        <activity android:name=".Activity.ListDownActivity" />
+        <activity android:name=".Activity.ListFavoriteActivity"/>
+
         <service android:name=".MyService"/>
         <receiver android:name=".Receiver.BroadcastReceiver" />
     </application>

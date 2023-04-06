@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,18 +23,15 @@ import com.example.layoutservice.R;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class SongFavortieAdapter extends RecyclerView.Adapter<SongFavortieAdapter.SongFavoriteHolder> {
+public class SongFavoriteAdapter extends RecyclerView.Adapter<SongFavoriteAdapter.SongFavoriteHolder> {
     private ArrayList<MusicFiles> musicFilesArrayList;
     private Context context;
-
-    private int idLayout;
     private int positionSelect = -1;
-
-
     @NonNull
     @Override
     public SongFavoriteHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_sub_single, parent,false);
+
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_listview, parent,false);
         return new SongFavoriteHolder(view);
     }
 
@@ -71,13 +69,10 @@ public class SongFavortieAdapter extends RecyclerView.Adapter<SongFavortieAdapte
             }
         });
     }
-
-    public SongFavortieAdapter(Context context,ArrayList<MusicFiles> musicFilesArrayList){
-        this.musicFilesArrayList = musicFilesArrayList;
+    public SongFavoriteAdapter(Context context, ArrayList<MusicFiles> musicFiles){
         this.context = context;
+        this.musicFilesArrayList = musicFiles;
     }
-
-
     @Override
     public int getItemCount() {
         if(musicFilesArrayList != null)
@@ -86,21 +81,18 @@ public class SongFavortieAdapter extends RecyclerView.Adapter<SongFavortieAdapte
         }
         return 0;
     }
-
-    public class SongFavoriteHolder extends RecyclerView.ViewHolder{
-
-
+    public static class SongFavoriteHolder extends RecyclerView.ViewHolder{
         private ImageView imgAva;
         private TextView txtSong;
         private TextView txtSingle;
-        private RelativeLayout layout_item;
+        private LinearLayout layout_item;
         public SongFavoriteHolder(@NonNull View v){
             super(v);
 
-            layout_item = v.findViewById(R.id.layout_item_song_single);
-            txtSingle = v.findViewById(R.id.tv_single);
-            txtSong = v.findViewById(R.id.tv_song);
-            imgAva = v.findViewById(R.id.img_song);
+            layout_item = v.findViewById(R.id.idListViewLayout);
+            txtSingle = v.findViewById(R.id.tvSingle);
+            txtSong = v.findViewById(R.id.tvName);
+            imgAva = v.findViewById(R.id.imv_music);
 
         }
     }

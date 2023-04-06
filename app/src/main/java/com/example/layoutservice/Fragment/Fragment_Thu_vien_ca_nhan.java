@@ -10,10 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.example.layoutservice.Activity.ListDownActivity;
+import com.example.layoutservice.Activity.ListFavoriteActivity;
 import com.example.layoutservice.Activity.ListSingerActivity;
-import com.example.layoutservice.Activity.ListSongSingleActivity;
-import com.example.layoutservice.Activity.ListViewDownActivity;
-import com.example.layoutservice.Activity.ListViewFavoriteActivity;
 import com.example.layoutservice.R;
 
 
@@ -30,12 +29,12 @@ public class Fragment_Thu_vien_ca_nhan extends Fragment {
         View view = inflater.inflate(R.layout.fragment_thu_vien_ca_nhan, container, false);
         btnFavoriteSongs = view.findViewById(R.id.bai_hat_yeu_thich);
         btnFavoriteSongs.setOnClickListener(view1 -> {
-            Intent intent = new Intent(getActivity(), ListViewFavoriteActivity.class);
+            Intent intent = new Intent(getActivity(), ListFavoriteActivity.class);
             startActivity(intent);
         });
         btnDownloadedSongs = view.findViewById(R.id.bai_hat_down);
         btnDownloadedSongs.setOnClickListener(view12 -> {
-            Intent intent = new Intent(getActivity(), ListViewDownActivity.class);
+            Intent intent = new Intent(getActivity(), ListDownActivity.class);
             startActivity(intent);
         });
         btnListFavoriteSinger = view.findViewById(R.id.favorite_singer);

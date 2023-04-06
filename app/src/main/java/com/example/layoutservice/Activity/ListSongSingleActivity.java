@@ -31,7 +31,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.layoutservice.Adapter.ListSongSingleAdapter;
+
 import com.example.layoutservice.Adapter.MusicFileAdapter;
 import com.example.layoutservice.Models.MusicFiles;
 import com.example.layoutservice.MyService;
@@ -59,7 +59,6 @@ public class ListSongSingleActivity extends AppCompatActivity {
     private TextView tvSong, tvSingle;
     private boolean isPlaying;
     private RecyclerView recyclerView;
-    private ListSongSingleAdapter listSongSingleAdapter;
     private MusicFileAdapter musicFileAdapter;
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -110,11 +109,6 @@ public class ListSongSingleActivity extends AppCompatActivity {
         });
 
     }
-
-
-
-
-
     private void permission() {
         if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED)

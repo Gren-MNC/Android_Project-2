@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,7 +25,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.layoutservice.Adapter.ListSongSingleAdapter;
 import com.example.layoutservice.Adapter.SingerAdapter;
 import com.example.layoutservice.Models.MusicFiles;
 import com.example.layoutservice.Models.Singer;
@@ -50,7 +50,6 @@ public class ListSingerActivity extends AppCompatActivity {
     private TextView tvSong, tvSingle;
     private boolean isPlaying;
     private RecyclerView recyclerView;
-    private ListSongSingleAdapter listSongSingleAdapter;
     private SingerAdapter singerAdapter;
 
     @Override
@@ -58,7 +57,8 @@ public class ListSingerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_listview_singer);
         permission();
-       // LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter("send_data_to_activity"));
+
+        btnBack = findViewById(R.id.btn_back);
         recyclerView = findViewById(R.id.rcv_data);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -69,12 +69,14 @@ public class ListSingerActivity extends AppCompatActivity {
         singerAdapter = new SingerAdapter(this,singers);
         recyclerView.setAdapter(singerAdapter);
 
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
     }
-
-
-
-
-
     private void permission() {
         if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED)

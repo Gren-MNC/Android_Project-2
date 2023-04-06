@@ -44,7 +44,7 @@
         android:background="@drawable/btn_random_play2"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcv_data"
+        android:id="@+id/rcv_data_favorite"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/btn_random_play"

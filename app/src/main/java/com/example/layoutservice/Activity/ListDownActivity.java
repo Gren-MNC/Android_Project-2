@@ -2,22 +2,14 @@ package com.example.layoutservice.Activity;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,60 +17,41 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.example.layoutservice.Adapter.ListSongSingleAdapter;
-import com.example.layoutservice.Adapter.MusicFileAdapter;
+import com.example.layoutservice.Adapter.SongDownAdapter;
 import com.example.layoutservice.Models.MusicFiles;
-import com.example.layoutservice.MyService;
 import com.example.layoutservice.R;
-import com.example.layoutservice.Receiver.BroadcastReceiver;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListViewFavoriteActivity extends AppCompatActivity {
+public class ListDownActivity extends AppCompatActivity {
     private List<MusicFiles> listSong = new ArrayList<>();
     public static final int REQUEST_CODE = 1;
     ArrayList<MusicFiles> musicFiles;
-    ArrayAdapter<String> adapter;
-    private static final int MY_PERMISSION_REQUEST = 1;
-    ArrayList<String> arrayList;
-    private ListView listView;
-    private Button btnStart,btnBack;
-    private Button btnStop;
-    private MusicFiles mSong;
-    private ImageView imgPauseOrPlay;
-    private ImageView imgCancel, imgSong;
-    private RelativeLayout relativeLayout;
-    private TextView tvSong, tvSingle;
-    private boolean isPlaying;
+    private Button btnBack;
     private RecyclerView recyclerView;
-    private ListSongSingleAdapter listSongSingleAdapter;
-    private MusicFileAdapter musicFileAdapter;
+    private SongDownAdapter songDownAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_list_favorite);
+        setContentView(R.layout.layout_list_download);
         permission();
-       // LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter("send_data_to_activity"));
 
-        btnBack = findViewById(R.id.btn_back_favorite);
-        recyclerView = findViewById(R.id.rcv_data);
+        btnBack = findViewById(R.id.btn_back_down);
+        recyclerView = findViewById(R.id.rcv_data_down);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(itemDecoration);
 
 
-        musicFileAdapter = new MusicFileAdapter(this,musicFiles);
-        recyclerView.setAdapter(musicFileAdapter);
+        songDownAdapter = new SongDownAdapter(this,musicFiles);
+        recyclerView.setAdapter(songDownAdapter);
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,16 +61,11 @@ public class ListViewFavoriteActivity extends AppCompatActivity {
         });
 
     }
-
-
-
-
-
     private void permission() {
         if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED)
         {
-            ActivityCompat.requestPermissions(ListViewFavoriteActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
+            ActivityCompat.requestPermissions(ListDownActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
         }
         else {
             Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
@@ -115,7 +83,7 @@ public class ListViewFavoriteActivity extends AppCompatActivity {
                 musicFiles = getAllAudio(this);
             }
             else {
-                ActivityCompat.requestPermissions(ListViewFavoriteActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
+                ActivityCompat.requestPermissions(ListDownActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
             }
         }
     }

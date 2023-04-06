@@ -22,33 +22,39 @@
         android:layout_marginStart="80dp"
         android:layout_marginTop="10dp"
         android:src="@drawable/music" />
-
-    <TextView
-        android:id="@+id/title_song"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_below="@+id/img_music"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Song Name"
-        android:textColor="@color/white"
-        android:textSize="25sp"
-        android:layout_below="@id/img_music"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:textAllCaps="true"
-        android:textStyle="bold"
-        android:fontFamily="serif"/>
+        android:orientation="vertical"
+        android:gravity="center">
 
-    <TextView
-        android:id="@+id/single"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/title_song"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:text="single"
-        android:fontFamily="serif"/>
+        <TextView
+            android:id="@+id/title_song"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/img_music"
+            android:layout_marginTop="20dp"
+            android:fontFamily="serif"
+            android:text="Song Name"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/single"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title_song"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:text="single"
+            android:fontFamily="serif"/>
+    </LinearLayout>
+
     <SeekBar
         android:id="@+id/seekbar"
         android:layout_width="350dp"
@@ -62,7 +68,7 @@
         android:id="@+id/tv_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/single"
+        android:layout_below="@id/linearLayout"
         android:text="0:00"
         android:layout_marginLeft="20dp"
         android:textColor="@color/white"
@@ -72,7 +78,7 @@
         android:id="@+id/tv_time1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/single"
+        android:layout_below="@+id/linearLayout"
         android:layout_marginStart="260dp"
         android:layout_toRightOf="@id/tv_time"
         android:text="4:00"

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,18 +26,13 @@ import java.util.ArrayList;
 public class SongDownAdapter extends RecyclerView.Adapter<SongDownAdapter.SongDownHolder> {
     private ArrayList<MusicFiles> musicFilesArrayList;
     private Context context;
-
-    private int idLayout;
     private int positionSelect = -1;
-
-
     @NonNull
     @Override
     public SongDownHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_sub_single, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_listview_down, parent,false);
         return new SongDownHolder(view);
     }
-
     @Override
     public void onBindViewHolder(@NonNull SongDownHolder holder, int position) {
         MusicFiles mFiles = musicFilesArrayList.get(position);
@@ -76,8 +72,6 @@ public class SongDownAdapter extends RecyclerView.Adapter<SongDownAdapter.SongDo
         this.musicFilesArrayList = musicFilesArrayList;
         this.context = context;
     }
-
-
     @Override
     public int getItemCount() {
         if(musicFilesArrayList != null)
@@ -86,21 +80,18 @@ public class SongDownAdapter extends RecyclerView.Adapter<SongDownAdapter.SongDo
         }
         return 0;
     }
-
     public class SongDownHolder extends RecyclerView.ViewHolder{
-
-
         private ImageView imgAva;
         private TextView txtSong;
         private TextView txtSingle;
-        private RelativeLayout layout_item;
+        private LinearLayout layout_item;
         public SongDownHolder(@NonNull View v){
             super(v);
 
-            layout_item = v.findViewById(R.id.layout_item_song_single);
-            txtSingle = v.findViewById(R.id.tv_single);
-            txtSong = v.findViewById(R.id.tv_song);
-            imgAva = v.findViewById(R.id.img_song);
+            layout_item = v.findViewById(R.id.idListViewDownLayout);
+            txtSingle = v.findViewById(R.id.tvSingle);
+            txtSong = v.findViewById(R.id.tvName);
+            imgAva = v.findViewById(R.id.imv_music);
 
         }
     }
