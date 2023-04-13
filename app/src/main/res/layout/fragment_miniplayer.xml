@@ -3,6 +3,7 @@
     android:id="@+id/bottom_layout"
     android:layout_width="match_parent"
     android:layout_height="64dp"
+    android:visibility="gone"
     android:layout_alignParentBottom="true"
     android:background="@color/purple_200"
     android:padding="12dp">

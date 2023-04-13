@@ -50,7 +50,7 @@ public class ListSongSingleActivity extends AppCompatActivity {
     private static final int MY_PERMISSION_REQUEST = 1;
     ArrayList<String> arrayList;
     private ListView listView;
-    private Button btnStart,btnBack;
+    private Button btnStart, btnBack;
     private Button btnStop;
     private MusicFiles mSong;
     private ImageView imgPauseOrPlay;
@@ -64,14 +64,12 @@ public class ListSongSingleActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
-            if(bundle == null)
-           {                return;
+            if (bundle == null) {
+                return;
             }
             mSong = (MusicFiles) bundle.get("object_song");
-           isPlaying = bundle.getBoolean("status_music");
+            isPlaying = bundle.getBoolean("status_music");
             int action = bundle.getInt("action_music");
-
-            handleLayoutMusic(action);
         }
     };
 
@@ -83,22 +81,17 @@ public class ListSongSingleActivity extends AppCompatActivity {
         permission();
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter("send_data_to_activity"));
 
-        relativeLayout = findViewById(R.id.bottom_layout);
 
         btnBack = findViewById(R.id.btn_back_singer);
-        imgPauseOrPlay = findViewById(R.id.img_pause_or_play);
-        imgCancel = findViewById(R.id.img_cancel);
-        imgSong = findViewById(R.id.img_song);
+
         recyclerView = findViewById(R.id.rcv_data);
-        tvSong = findViewById(R.id.tv_song);
-        tvSingle = findViewById(R.id.tv_single);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(itemDecoration);
 
 
-        musicFileAdapter = new MusicFileAdapter(this,musicFiles);
+        musicFileAdapter = new MusicFileAdapter(this, musicFiles);
         recyclerView.setAdapter(musicFileAdapter);
 
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -108,15 +101,15 @@ public class ListSongSingleActivity extends AppCompatActivity {
             }
         });
 
+
     }
+
     private void permission() {
-        if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(ListSongSingleActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
-        }
-        else {
-            Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(ListSongSingleActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
+        } else {
+            Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
             musicFiles = getAllAudio(this);
         }
     }
@@ -124,18 +117,17 @@ public class ListSongSingleActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CODE){
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
-                Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
+        if (requestCode == REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
                 musicFiles = getAllAudio(this);
-            }
-            else {
-                ActivityCompat.requestPermissions(ListSongSingleActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
+            } else {
+                ActivityCompat.requestPermissions(ListSongSingleActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
             }
         }
     }
-    public static ArrayList<MusicFiles> getAllAudio(Context context){
+
+    public static ArrayList<MusicFiles> getAllAudio(Context context) {
         ArrayList<MusicFiles> tempAudioList = new ArrayList<>();
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String[] projection = {
@@ -145,18 +137,17 @@ public class ListSongSingleActivity extends AppCompatActivity {
                 MediaStore.Audio.Media.DATA,
                 MediaStore.Audio.Media.ARTIST
         };
-        Cursor cursor = context.getContentResolver().query(uri,projection,null,null,null);
-        if(cursor != null)
-        {
-            while (cursor.moveToNext()){
+        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
                 String album = cursor.getString(0);
                 String title = cursor.getString(1);
                 String duration = cursor.getString(2);
                 String path = cursor.getString(3);
                 String artist = cursor.getString(4);
 
-                MusicFiles musicFiles = new MusicFiles(path,title,artist,album,duration);
-                Log.e("Path: "+path,"Album: "+album);
+                MusicFiles musicFiles = new MusicFiles(path, title, artist, album, duration);
+                Log.e("Path: " + path, "Album: " + album);
                 tempAudioList.add(musicFiles);
             }
             cursor.close();
@@ -165,76 +156,11 @@ public class ListSongSingleActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy()
-    {
+    protected void onDestroy() {
         super.onDestroy();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
     }
-    private void handleLayoutMusic(int action) {
 
-        switch (action)
-        {
-            case MyService.ACTION_START:
-                relativeLayout.setVisibility(View.VISIBLE);
-                showInfoSong();
-                break;
-            case MyService.ACTION_PAUSE:
-                setStatusButtonPauseOrPlay();
-                break;
-            case MyService.ACTION_RESUME:
-                setStatusButtonPauseOrPlay();
-                break;
-            case  MyService.ACTION_CLEAR:
-                relativeLayout.setVisibility(View.GONE);
-                break;
-        }
-    }
-    private void setStatusButtonPauseOrPlay(){
-        if(isPlaying){
-            imgPauseOrPlay.setImageResource(R.drawable.ic_pause);
-        }
-        else {
-            imgPauseOrPlay.setImageResource(R.drawable.ic_play2);
-        }
-    }
-    private void showInfoSong(){
-        if(mSong == null)
-        {
-            return;
-        }
-        byte[] image = getAlbumArt(mSong.getPath());
-        if(image != null){
-            Glide.with(this).asBitmap()
-                    .load(image)
-                    .into(imgSong);
-        }
-        else {
-            Glide.with(this)
-                    .load(R.drawable.ic_music)
-                    .into(imgSong);
-        }
-
-        tvSong.setText(mSong.getTitle());
-        tvSingle.setText(mSong.getArtist());
-
-        imgPauseOrPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(isPlaying){
-                    sendActionToService(MyService.ACTION_PAUSE);
-                }
-                else {
-                    sendActionToService(MyService.ACTION_RESUME);
-                }
-            }
-        });
-        imgCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendActionToService(MyService.ACTION_CLEAR);
-            }
-        });
-    }
     private byte[] getAlbumArt(String uri){
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(uri);
