@@ -11,7 +11,7 @@
             android:id="@+id/tvTitleChuDeVaTheLoai"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chủ đề và thể loại"
+            android:text="Top bài hát hot"
             android:textSize="20sp"
             android:textColor="#ffff"
             android:textStyle="bold"/>
@@ -23,13 +23,12 @@
             android:textSize="15sp"
             android:textColor="#ffff"
             android:layout_alignParentRight="true" />
-    </RelativeLayout>
-    <HorizontalScrollView
-        android:id="@+id/horizontalScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/relativeChuDeTheLoai"
-        android:scrollbars="none">
 
-    </HorizontalScrollView>
+        <ListView
+            android:id="@+id/listViewTopSong"
+            android:layout_width="match_parent"
+            android:layout_height="135dp"
+            android:layout_below="@id/tvTitleChuDeVaTheLoai"
+            android:layout_marginTop="7dp" />
+    </RelativeLayout>
 </RelativeLayout>

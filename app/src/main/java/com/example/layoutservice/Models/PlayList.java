@@ -1,54 +1,45 @@
 package com.example.layoutservice.Models;
+import android.net.Uri;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class PlayList implements Serializable {
 
-@SerializedName("IdPlayList")
-@Expose
-private String idPlayList;
-@SerializedName("Ten")
-@Expose
 private String ten;
-@SerializedName("HinhNen")
-@Expose
-private String hinhNen;
-@SerializedName("HinhIcon")
-@Expose
-private String hinhIcon;
+private Uri hinhNen;
+private List<SongFireBase> songFireBaseList;
 
-public String getIdPlayList() {
-return idPlayList;
-}
+    public PlayList(String ten, Uri hinhNen, List<SongFireBase> songFireBaseList) {
+        this.ten = ten;
+        this.hinhNen = hinhNen;
+        this.songFireBaseList = songFireBaseList;
+    }
 
-public void setIdPlayList(String idPlayList) {
-this.idPlayList = idPlayList;
-}
+    public String getTen() {
+        return ten;
+    }
 
-public String getTen() {
-return ten;
-}
+    public void setTen(String ten) {
+        this.ten = ten;
+    }
 
-public void setTen(String ten) {
-this.ten = ten;
-}
+    public Uri getHinhNen() {
+        return hinhNen;
+    }
 
-public String getHinhNen() {
-return hinhNen;
-}
+    public void setHinhNen(Uri hinhNen) {
+        this.hinhNen = hinhNen;
+    }
 
-public void setHinhNen(String hinhNen) {
-this.hinhNen = hinhNen;
-}
+    public List<SongFireBase> getSongFireBaseList() {
+        return songFireBaseList;
+    }
 
-public String getHinhIcon() {
-return hinhIcon;
-}
-
-public void setHinhIcon(String hinhIcon) {
-this.hinhIcon = hinhIcon;
-}
-
+    public void setSongFireBaseList(List<SongFireBase> songFireBaseList) {
+        this.songFireBaseList = songFireBaseList;
+    }
 }

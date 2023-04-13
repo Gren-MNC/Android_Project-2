@@ -1,55 +1,56 @@
 package com.example.layoutservice.Models;
 
+import android.net.Uri;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Album implements Serializable {
 
-@SerializedName("IdAlbum")
-@Expose
-private String idAlbum;
-@SerializedName("TenAlbum")
-@Expose
 private String tenAlbum;
-@SerializedName("TenCaSiAlbum")
-@Expose
 private String tenCaSiAlbum;
-@SerializedName("HinhAlbum")
-@Expose
-private String hinhAlbum;
+private Uri hinhAlbum;
+private List<SongFireBase> AlbumList;
 
-public String getIdAlbum() {
-return idAlbum;
-}
+    public Album(String tenAlbum, String tenCaSiAlbum, Uri hinhAlbum, List<SongFireBase> albumList) {
+        this.tenAlbum = tenAlbum;
+        this.tenCaSiAlbum = tenCaSiAlbum;
+        this.hinhAlbum = hinhAlbum;
+        AlbumList = albumList;
+    }
 
-public void setIdAlbum(String idAlbum) {
-this.idAlbum = idAlbum;
-}
+    public String getTenAlbum() {
+        return tenAlbum;
+    }
 
-public String getTenAlbum() {
-return tenAlbum;
-}
+    public void setTenAlbum(String tenAlbum) {
+        this.tenAlbum = tenAlbum;
+    }
 
-public void setTenAlbum(String tenAlbum) {
-this.tenAlbum = tenAlbum;
-}
+    public String getTenCaSiAlbum() {
+        return tenCaSiAlbum;
+    }
 
-public String getTenCaSiAlbum() {
-return tenCaSiAlbum;
-}
+    public void setTenCaSiAlbum(String tenCaSiAlbum) {
+        this.tenCaSiAlbum = tenCaSiAlbum;
+    }
 
-public void setTenCaSiAlbum(String tenCaSiAlbum) {
-this.tenCaSiAlbum = tenCaSiAlbum;
-}
+    public Uri getHinhAlbum() {
+        return hinhAlbum;
+    }
 
-public String getHinhAlbum() {
-return hinhAlbum;
-}
+    public void setHinhAlbum(Uri hinhAlbum) {
+        this.hinhAlbum = hinhAlbum;
+    }
 
-public void setHinhAlbum(String hinhAlbum) {
-this.hinhAlbum = hinhAlbum;
-}
+    public List<SongFireBase> getAlbumList() {
+        return AlbumList;
+    }
 
+    public void setAlbumList(List<SongFireBase> albumList) {
+        AlbumList = albumList;
+    }
 }

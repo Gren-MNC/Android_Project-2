@@ -14,25 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-<!--        <fragment-->
-<!--            android:id="@+id/fragmentTimKiem"-->
-<!--            android:name="com.example.layoutservice.Fragment.Fragment_Tim_Kiem"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="48dp"-->
-<!--            tools:layout="@layout/fragment_tim_kiem" />-->
-<!--        <fragment-->
-<!--            android:id="@+id/fragmentBanner"-->
-<!--            android:name="com.example.layoutservice.Fragment.FragmentBanner"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            tools:layout="@layout/fragment_banner" />-->
-        <fragment
-            android:id="@+id/fragmentPlayList"
-            android:name="com.example.layoutservice.Fragment.Fragment_PlayList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_playlist" />
-
         <fragment
             android:id="@+id/fragmentChuDeTheLoai"
             android:name="com.example.layoutservice.Fragment.Fragment_ChuDe_TheLoai"
