@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddSong">
+
+    <EditText
+        android:id="@+id/songName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tên bài"
+        app:layout_constraintTop_toTopOf="parent" />
+    <EditText
+        android:id="@+id/singerName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tên ca sĩ"
+        app:layout_constraintTop_toBottomOf="@id/songName" />
+    <EditText
+        android:id="@+id/imagesLink"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Link hình"
+        app:layout_constraintTop_toBottomOf="@id/singerName" />
+    <EditText
+        android:id="@+id/songLink"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Link Bài"
+        app:layout_constraintTop_toBottomOf="@id/imagesLink" />
+
+    <Button
+        android:id="@+id/save_song_into_DB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Save Song into DB"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/songLink" />
+</androidx.constraintlayout.widget.ConstraintLayout>
