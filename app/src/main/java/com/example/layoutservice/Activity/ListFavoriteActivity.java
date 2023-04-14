@@ -1,6 +1,7 @@
 package com.example.layoutservice.Activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -21,9 +22,16 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.layoutservice.Adapter.FirebaseSongAdapter;
 import com.example.layoutservice.Adapter.SongFavoriteAdapter;
 import com.example.layoutservice.Models.MusicFiles;
+import com.example.layoutservice.Models.SongFireBase;
 import com.example.layoutservice.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +43,11 @@ public class ListFavoriteActivity extends AppCompatActivity {
     private Button btnBack;
     private RecyclerView recyclerView;
     private SongFavoriteAdapter songFavoriteAdapter;
+    ArrayList<SongFireBase> songFireBaseArrayList;
+    FirebaseSongAdapter firebaseSongAdapter;
+    FirebaseDatabase db;
+    DatabaseReference databaseReference;
+    Context context;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,13 +57,32 @@ public class ListFavoriteActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btn_back_favorite);
         recyclerView = findViewById(R.id.rcv_data_favorite);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
-        recyclerView.addItemDecoration(itemDecoration);
+        databaseReference = FirebaseDatabase.getInstance().getReference("SongFireBase");
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        songFireBaseArrayList = new ArrayList<>();
+        firebaseSongAdapter = new FirebaseSongAdapter(context, songFireBaseArrayList);
 
-        songFavoriteAdapter = new SongFavoriteAdapter(this,musicFiles);
-        recyclerView.setAdapter(songFavoriteAdapter);
+        recyclerView.setAdapter(firebaseSongAdapter);
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    SongFireBase songFireBase = dataSnapshot.getValue(SongFireBase.class);
+                    songFireBaseArrayList.add(songFireBase);
+                }
+                firebaseSongAdapter = new FirebaseSongAdapter(ListFavoriteActivity.this,songFireBaseArrayList);
+                recyclerView.setAdapter(firebaseSongAdapter);
+                firebaseSongAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +99,7 @@ public class ListFavoriteActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(ListFavoriteActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
         }
         else {
-            Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
+           // Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
             musicFiles = getAllAudio(this);
         }
     }
@@ -78,7 +110,7 @@ public class ListFavoriteActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
-                Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
+               // Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
                 musicFiles = getAllAudio(this);
             }
             else {

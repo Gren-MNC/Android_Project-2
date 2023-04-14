@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.layoutservice.Activity.ListSongSingleActivity;
 import com.example.layoutservice.Adapter.FirebaseSongAdapter;
 import com.example.layoutservice.Models.Song;
 import com.example.layoutservice.Models.SongFireBase;
@@ -70,6 +71,8 @@ public class Fragment_ChuDe_TheLoai extends Fragment {
                     SongFireBase songFireBase = dataSnapshot.getValue(SongFireBase.class);
                     songFireBaseArrayList.add(songFireBase);
                 }
+                firebaseSongAdapter = new FirebaseSongAdapter(getActivity(),songFireBaseArrayList);
+                recyclerView.setAdapter(firebaseSongAdapter);
                 firebaseSongAdapter.notifyDataSetChanged();
             }
 
