@@ -26,6 +26,14 @@ public class SongFireBase implements Serializable {
         this.singer = singer;
     }
 
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setSongUri(String songUri) {
+        this.songUri = songUri;
+    }
+
     public SongFireBase(String title, String singer, String image, String songUri) {
         this.title = title;
         this.singer = singer;
@@ -40,4 +48,6 @@ public class SongFireBase implements Serializable {
     public String getSongUri() {
         return songUri;
     }
+
+    public SongFireBase() {}
 }

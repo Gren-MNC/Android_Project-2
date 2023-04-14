@@ -24,11 +24,10 @@
             android:textColor="#ffff"
             android:layout_alignParentRight="true" />
 
-        <ListView
-            android:id="@+id/listViewTopSong"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/firebase_song_recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="135dp"
-            android:layout_below="@id/tvTitleChuDeVaTheLoai"
-            android:layout_marginTop="7dp" />
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvTitleChuDeVaTheLoai"/>
     </RelativeLayout>
 </RelativeLayout>

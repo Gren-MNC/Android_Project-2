@@ -18,14 +18,14 @@
             android:id="@+id/fragmentChuDeTheLoai"
             android:name="com.example.layoutservice.Fragment.Fragment_ChuDe_TheLoai"
             android:layout_width="match_parent"
-            android:layout_height="129dp"
+            android:layout_height="319dp"
             tools:layout="@layout/fragment_chu_de_the_loai" />
 
         <fragment
             android:id="@+id/fragmentAlBumHot"
             android:name="com.example.layoutservice.Fragment.Fragment_Album_Hot"
             android:layout_width="match_parent"
-            android:layout_height="172dp"
+            android:layout_height="wrap_content"
             tools:layout="@layout/fragment_album_hot" />
     </LinearLayout>
 
