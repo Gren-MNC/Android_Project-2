@@ -25,13 +25,14 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/imv_music"
             android:text="Music"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="20dp"/>
         <TextView
             android:id="@+id/tv_single"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Single"
+            android:textColor="#fff"
             android:layout_toRightOf="@id/imv_music"
             android:layout_below="@id/tvName"
             android:textSize="18dp" />
@@ -46,13 +47,13 @@
             android:layout_height="30dp"
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
-            android:background="@drawable/ic_download_black"
+            android:background="@drawable/ic_download"
             android:contentDescription="btn_download"/>
         <Button
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/ic_like2"
+            android:background="@drawable/ic_like1"
             android:layout_marginRight="10dp"/>
     </LinearLayout>
 

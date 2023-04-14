@@ -62,7 +62,6 @@ public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapte
 
         holder.txtSong.setText(songFireBase.getTitle());
         holder.txtSingle.setText(songFireBase.getSinger());
-//        setImage(holder, songFireBase.getTitle());
         Picasso.with(holder.imgAva.getContext()).load(songFireBase.getImage()).into(holder.imgAva);
         holder.layout_item.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,24 +75,6 @@ public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapte
                 bundle.putInt("position_key", holder.getAdapterPosition());
                 intent.putExtras(bundle);
                 context.startActivity(intent);
-            }
-        });
-    }
-
-    private void setImage(FirebaseSongAdapter.FirebaseHolder holder, String ImgName){
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference();
-        DatabaseReference getImage = databaseReference.child("/SongFireBase/"+ImgName+"/image");
-        getImage.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String link = snapshot.getValue(
-                        String.class);
-                Picasso.with(holder.imgAva.getContext()).load(link).into(holder.imgAva);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(context, "Error when load song Image ", Toast.LENGTH_SHORT).show();
             }
         });
     }

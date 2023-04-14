@@ -33,11 +33,11 @@
             tools:layout="@layout/fragment_thu_vien_ca_nhan" />
 
         <fragment
-            android:id="@+id/nhac_da_nghe"
+            android:id="@+id/nhac_gan_day"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:name="com.example.layoutservice.Fragment.Fragment_nhac_da_nghe"
-            tools:layout="@layout/fragment_nhac_da_nghe"
+            android:name="com.example.layoutservice.Fragment.Fragment_ChuDe_TheLoai"
+            tools:layout="@layout/fragment_chu_de_the_loai"
             />
 
         <fragment
