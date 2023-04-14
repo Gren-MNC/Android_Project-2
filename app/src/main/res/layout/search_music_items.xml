@@ -50,5 +50,5 @@
         android:layout_height="20dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_like1"/>
+        android:src="@drawable/ic_like2"/>
 </RelativeLayout>

@@ -46,6 +46,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:layout="@layout/fragment_playlist" />
+        <fragment
+            android:id="@+id/fragmentAlBumHot"
+            android:name="com.example.layoutservice.Fragment.Fragment_Album_Hot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_album_hot" />
     </LinearLayout>
 
 </ScrollView>

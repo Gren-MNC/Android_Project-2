@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,7 +62,8 @@ public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapte
 
         holder.txtSong.setText(songFireBase.getTitle());
         holder.txtSingle.setText(songFireBase.getSinger());
-        setImage(holder, songFireBase.getTitle());
+//        setImage(holder, songFireBase.getTitle());
+        Picasso.with(holder.imgAva.getContext()).load(songFireBase.getImage()).into(holder.imgAva);
         holder.layout_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,7 +107,7 @@ public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapte
         private ImageView imgAva;
         private TextView txtSong;
         private TextView txtSingle;
-        private RelativeLayout layout_item;
+        private LinearLayout layout_item;
 
         public FirebaseHolder(@NonNull View v) {
             super(v);
