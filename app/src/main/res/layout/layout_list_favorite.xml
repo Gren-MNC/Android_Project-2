@@ -41,15 +41,5 @@
         android:layout_below="@id/description"
         android:layout_marginTop="22dp" />
 
-    <FrameLayout
-        android:id="@+id/bottom_layout"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_alignParentBottom="true">
-        <fragment
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:name="com.example.layoutservice.Fragment.Fragment_MiniPlayer"
-            tools:layout="@layout/fragment_miniplayer" />
-    </FrameLayout>
+
 </RelativeLayout>

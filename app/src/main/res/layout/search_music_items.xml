@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    tools:ignore="MissingDefaultResource">
+    tools:ignore="MissingDefaultResource"
+    android:id="@+id/item_song">
 
     <ImageView
         android:id="@+id/imageViewSearchMusic"

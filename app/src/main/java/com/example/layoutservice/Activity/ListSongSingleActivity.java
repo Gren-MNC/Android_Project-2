@@ -1,6 +1,7 @@
 package com.example.layoutservice.Activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -32,11 +33,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import com.example.layoutservice.Adapter.FirebaseSongAdapter;
 import com.example.layoutservice.Adapter.MusicFileAdapter;
 import com.example.layoutservice.Models.MusicFiles;
+import com.example.layoutservice.Models.SongFireBase;
 import com.example.layoutservice.MyService;
 import com.example.layoutservice.R;
 import com.example.layoutservice.Receiver.BroadcastReceiver;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,6 +68,13 @@ public class ListSongSingleActivity extends AppCompatActivity {
     private boolean isPlaying;
     private RecyclerView recyclerView;
     private MusicFileAdapter musicFileAdapter;
+    View view;
+    ArrayList<SongFireBase> songFireBaseArrayList;
+    FirebaseSongAdapter firebaseSongAdapter;
+    FirebaseDatabase db;
+    DatabaseReference databaseReference;
+    Context context;
+
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -78,21 +93,35 @@ public class ListSongSingleActivity extends AppCompatActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_single);
-        permission();
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter("send_data_to_activity"));
-
-
+        recyclerView = findViewById(R.id.rcv_data);
         btnBack = findViewById(R.id.btn_back_singer);
 
-        recyclerView = findViewById(R.id.rcv_data);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        recyclerView.addItemDecoration(itemDecoration);
+        databaseReference = FirebaseDatabase.getInstance().getReference("SongFireBase");
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        songFireBaseArrayList = new ArrayList<>();
+        firebaseSongAdapter = new FirebaseSongAdapter(context, songFireBaseArrayList);
 
+        recyclerView.setAdapter(firebaseSongAdapter);
 
-        musicFileAdapter = new MusicFileAdapter(this, musicFiles);
-        recyclerView.setAdapter(musicFileAdapter);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    SongFireBase songFireBase = dataSnapshot.getValue(SongFireBase.class);
+                    songFireBaseArrayList.add(songFireBase);
+                }
+                firebaseSongAdapter = new FirebaseSongAdapter(ListSongSingleActivity.this,songFireBaseArrayList);
+                recyclerView.setAdapter(firebaseSongAdapter);
+                firebaseSongAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.layoutservice.Models.MusicFiles;
+import com.example.layoutservice.Models.SongFireBase;
 import com.example.layoutservice.MyService;
 import com.example.layoutservice.R;
 import com.example.layoutservice.Receiver.BroadcastReceiver;
@@ -42,8 +43,8 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
     private boolean shuffle = false;
     Button btnPlay, btnNext, btnPre, btnList, btnBack, btnRepeat, btnShuffle;
     TextView tvName, tvSinger, tvStart, tvStop;
-    ArrayList<MusicFiles> listSong;
-    private MusicFiles mSong;
+    ArrayList<SongFireBase> listSong;
+    private SongFireBase mSong;
     private int positionSelect;
     SeekBar seekMusic, seekVolume;
     private int actionService, mCurrentPosition, durationTotal;
@@ -129,7 +130,7 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
         animator.start();
 
         tvName.setText(mSong.getTitle());
-        tvSinger.setText(mSong.getArtist());
+        tvSinger.setText(mSong.getSinger());
 
         clickStartService(ACTION_START);
 
@@ -295,7 +296,7 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
         startMusic(mSong);
         clickStartService(ACTION_START);
         tvName.setText(mSong.getTitle());
-        tvSinger.setText(mSong.getArtist());
+        tvSinger.setText(mSong.getSinger());
 
         int durationTotal = mediaPlayer.getDuration() / 1000;
         tvStop.setText(formatTime(durationTotal));
@@ -319,7 +320,7 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
         startMusic(mSong);
         clickStartService(ACTION_START);
         tvName.setText(mSong.getTitle());
-        tvSinger.setText(mSong.getArtist());
+        tvSinger.setText(mSong.getSinger());
         int durationTotal = mediaPlayer.getDuration() / 1000;
         tvStop.setText(formatTime(durationTotal));
 
@@ -331,14 +332,14 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
         if(bundle != null) {
 
             positionSelect = bundle.getInt("position_key");
-            listSong = (ArrayList<MusicFiles>) bundle.getSerializable("listSong_key");
+            listSong = (ArrayList<SongFireBase>) bundle.getSerializable("listSong_key");
 
-            mSong = (MusicFiles) bundle.get("object_song");
+            mSong = (SongFireBase) bundle.get("object_song");
             if (mediaPlayer != null){
                 mediaPlayer.stop();
                 mediaPlayer.release();
             }
-            uri = Uri.parse(mSong.getPath());
+            uri = Uri.parse(mSong.getSongUri());
             mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
 
         }
@@ -353,13 +354,13 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
         startService(intent);
 
     }
-    private void startMusic(MusicFiles mSong) {
+    private void startMusic(SongFireBase mSong) {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();
         }
 
-        uri  = Uri.parse(mSong.getPath());
+        uri  = Uri.parse(mSong.getSongUri());
         mediaPlayer = MediaPlayer.create(getApplicationContext(),uri);
 
         mediaPlayer.start();

@@ -24,13 +24,14 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.bumptech.glide.Glide;
 import com.example.layoutservice.Activity.ListenToMusicActivity;
 import com.example.layoutservice.Models.MusicFiles;
+import com.example.layoutservice.Models.SongFireBase;
 import com.example.layoutservice.Receiver.BroadcastReceiver;
 
 import java.io.IOException;
 
 public class MyService extends Service {
     private boolean isPlaying;
-    private MusicFiles mSong;
+    private SongFireBase mSong;
     private int actionFromActivity;
     private int actionService;
     public static final int ACTION_PAUSE = 1;
@@ -55,7 +56,7 @@ public class MyService extends Service {
         Bundle bundle = intent.getExtras();
         if(bundle != null)
         {
-            MusicFiles song = (MusicFiles) bundle.get("object_song");
+            SongFireBase song = (SongFireBase) bundle.get("object_song");
             actionFromActivity = bundle.getInt("action_music_to_service");
             if(song!=null)
             {
@@ -162,7 +163,7 @@ public class MyService extends Service {
 //                .build();
 //        startForeground(1, notification);
 //    }
-    private void sendNotificationMedia(MusicFiles mSong){
+    private void sendNotificationMedia(SongFireBase mSong){
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.ic_music);
         MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(this,"tag");
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,Chanel_ID)
@@ -171,7 +172,7 @@ public class MyService extends Service {
                 .setLargeIcon(bitmap)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentTitle(mSong.getTitle())
-                .setContentText(mSong.getArtist())
+                .setContentText(mSong.getSinger())
                 .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap).bigLargeIcon(bitmap))
                 .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
                         .setShowActionsInCompactView(0,1,2 /* #1: pause button */)
@@ -213,16 +214,16 @@ public class MyService extends Service {
         return art;
     }
 
-    /*@Override
-    public void onDestroy(){
-        super.onDestroy();
-        Log.e("Mess","My Service OnDestroy");
-        if(mediaPlayer != null)
-        {
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
-    }*/
+//    @Override
+//    public void onDestroy(){
+//        super.onDestroy();
+//        Log.e("Mess","My Service OnDestroy");
+//        if(mediaPlayer != null)
+//        {
+//            mediaPlayer.release();
+//            mediaPlayer = null;
+//        }
+//    }
     private void sendActionToActivity(int action){
         Intent intent = new Intent("send_data_to_activity");
         Bundle bundle = new Bundle();
