@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_layout_favorite"
@@ -10,7 +11,8 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:background="@drawable/ic_back_2"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:contentDescription="favorite"/>
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
@@ -31,33 +33,23 @@
         android:layout_centerHorizontal="true"
         android:textSize="18dp"
         android:layout_marginTop="5dp"/>
-    <Button
-        android:id="@+id/btn_random_play"
-        android:layout_width="300dp"
-        android:layout_height="60dp"
-        android:text="Phát ngẫu nhiên"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/description"
-        android:textSize="25dp"
-        android:layout_marginTop="40dp"
-        android:textColor="@color/white"
-        android:background="@drawable/btn_random_play2"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv_data_favorite"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/btn_random_play"
-        android:layout_marginTop="20dp" />
+        android:layout_below="@id/description"
+        android:layout_marginTop="22dp" />
+
     <FrameLayout
         android:id="@+id/bottom_layout"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:layout_alignParentBottom="true"
-        >
+        android:layout_alignParentBottom="true">
         <fragment
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:name="com.example.layoutservice.Fragment.Fragment_MiniPlayer"/>
+            android:name="com.example.layoutservice.Fragment.Fragment_MiniPlayer"
+            tools:layout="@layout/fragment_miniplayer" />
     </FrameLayout>
 </RelativeLayout>
