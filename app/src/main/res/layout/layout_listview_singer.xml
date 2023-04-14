@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_layout_favorite"
+    android:background="@drawable/background"
     android:padding="10dp">
 
     <Button
@@ -18,7 +18,7 @@
         android:layout_centerHorizontal="true"
         android:text="Danh sách nghệ sĩ"
         android:layout_below="@id/btn_back"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="35sp"
         android:textStyle="bold"
         android:layout_marginTop="10dp"/>

@@ -45,7 +45,7 @@ public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapte
     @Override
     public FirebaseSongAdapter.FirebaseHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_sub_single, parent,false);
-        return new FirebaseSongAdapter.FirebaseHolder(view);
+        return new FirebaseSongAdapter.FirebaseHolder(view, parent);
     }
     public FirebaseSongAdapter(Context context,ArrayList<SongFireBase> songFireBasesList){
         this.songFireBasesList = songFireBasesList;
@@ -63,6 +63,8 @@ public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapte
         holder.txtSong.setText(songFireBase.getTitle());
         holder.txtSingle.setText(songFireBase.getSinger());
         Picasso.with(holder.imgAva.getContext()).load(songFireBase.getImage()).into(holder.imgAva);
+
+
         holder.layout_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,7 +92,7 @@ public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapte
         private TextView txtSingle;
         private LinearLayout layout_item;
 
-        public FirebaseHolder(@NonNull View v) {
+        public FirebaseHolder(@NonNull View v, ViewGroup viewGroup) {
             super(v);
 
             layout_item = v.findViewById(R.id.layout_item_song_single);

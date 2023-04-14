@@ -3,36 +3,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_layout_favorite"
+    android:background="@drawable/background"
     android:padding="10dp">
 
     <Button
         android:id="@+id/btn_back_favorite"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="@drawable/ic_back_2"
         android:layout_alignParentStart="true"
-        android:contentDescription="favorite"/>
+        android:background="@drawable/ic_back_2"
+        android:contentDescription="favorite" />
+
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_below="@id/btn_back_favorite"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
         android:text="Bài hát yêu thích"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="35sp"
-        android:textStyle="bold"
-        android:layout_marginTop="30dp"/>
+        android:textStyle="bold" />
+
     <TextView
         android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Danh mục bài hát yêu thích"
         android:layout_below="@+id/title"
         android:layout_centerHorizontal="true"
-        android:textSize="18dp"
-        android:layout_marginTop="5dp"/>
+        android:layout_marginTop="5dp"
+        android:text="Danh mục bài hát yêu thích"
+        android:textColor="@color/white"
+        android:textSize="18dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv_data_favorite"
