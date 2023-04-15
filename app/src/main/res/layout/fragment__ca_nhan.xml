@@ -39,13 +39,6 @@
             android:name="com.example.layoutservice.Fragment.Fragment_ChuDe_TheLoai"
             tools:layout="@layout/fragment_chu_de_the_loai"
             />
-
-        <fragment
-            android:id="@+id/fragmentPlayList"
-            android:name="com.example.layoutservice.Fragment.Fragment_PlayList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_playlist" />
         <fragment
             android:id="@+id/fragmentAlBumHot"
             android:name="com.example.layoutservice.Fragment.Fragment_Album_Hot"

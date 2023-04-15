@@ -24,7 +24,7 @@
             android:textColor="#ffff"
             android:layout_alignParentRight="true"
             android:textSize="15sp"
-            android:text="xem thêm" />
+            android:text="Xem tất cả" />
     </RelativeLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recylerViewAlbumHot"
