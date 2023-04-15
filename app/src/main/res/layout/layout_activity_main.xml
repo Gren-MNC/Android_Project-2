@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -31,4 +31,16 @@
             android:name="com.example.layoutservice.Fragment.Fragment_Ca_nhan"
             tools:layout="@layout/fragment__ca_nhan"/>
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+   <FrameLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_alignParentBottom="true">
+       <fragment
+           android:id="@+id/fragment_miniplayer"
+           android:visibility="gone"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:name="com.example.layoutservice.Fragment.Fragment_Miniplayer"
+           tools:layout="@layout/fragment_miniplayer"/>
+   </FrameLayout>
+</RelativeLayout>
