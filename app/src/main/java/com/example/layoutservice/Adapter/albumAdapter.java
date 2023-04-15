@@ -1,6 +1,8 @@
 package com.example.layoutservice.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +15,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.layoutservice.Activity.ViewAlbumActivity;
 import com.example.layoutservice.Models.Album;
+import com.example.layoutservice.Models.SongFireBase;
 import com.example.layoutservice.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class albumAdapter extends RecyclerView.Adapter<albumAdapter.FirebaseHolder> {
 
@@ -48,7 +53,13 @@ public class albumAdapter extends RecyclerView.Adapter<albumAdapter.FirebaseHold
         holder.linearLayout_album_items.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "Susscess", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, ViewAlbumActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("objectName",album);
+                bundle.putSerializable("Song_List",album.getAlbumList());
+                bundle.putInt("position_key",holder.getAdapterPosition() );
+                intent.putExtras(bundle);
+                context.startActivity(intent);
             }
         });
     }

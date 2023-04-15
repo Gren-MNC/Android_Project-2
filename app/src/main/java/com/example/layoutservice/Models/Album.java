@@ -6,6 +6,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Album implements Serializable {
@@ -13,9 +14,9 @@ public class Album implements Serializable {
 private String tenAlbum;
 private String tenCaSiAlbum;
 private String hinhAlbum;
-private List<SongFireBase> AlbumList;
+private ArrayList<SongFireBase> AlbumList;
 
-    public Album(String tenAlbum, String tenCaSiAlbum, String hinhAlbum, List<SongFireBase> albumList) {
+    public Album(String tenAlbum, String tenCaSiAlbum, String hinhAlbum, ArrayList<SongFireBase> albumList) {
         this.tenAlbum = tenAlbum;
         this.tenCaSiAlbum = tenCaSiAlbum;
         this.hinhAlbum = hinhAlbum;
@@ -48,11 +49,11 @@ private List<SongFireBase> AlbumList;
         this.hinhAlbum = hinhAlbum;
     }
 
-    public List<SongFireBase> getAlbumList() {
+    public ArrayList<SongFireBase> getAlbumList() {
         return AlbumList;
     }
 
-    public void setAlbumList(List<SongFireBase> albumList) {
+    public void setAlbumList(ArrayList<SongFireBase> albumList) {
         AlbumList = albumList;
     }
 }

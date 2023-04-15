@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background">
+    <RelativeLayout
+        android:id="@+id/background_album"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:padding="20dp"
+        android:background="@drawable/icon_logo">
+        <Button
+            android:id="@+id/btn_items_back_album"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/ic_back_2"/>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/RelativeLayout_viewAlbum"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/background_album">
+        <TextView
+            android:id="@+id/Name_album_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tên album"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="40dp"
+            />
+
+        <TextView
+            android:id="@+id/Name_singer_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="Tên ca sĩ"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:layout_alignTop="@+id/Name_album_tv"
+            />
+        <TextView
+            android:id="@+id/song_in_album"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bài hát trong album"
+            android:layout_marginTop="50dp"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_alignTop="@+id/Name_singer_tv"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/view_items_album"
+            android:layout_below="@+id/song_in_album"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </RelativeLayout>
+</RelativeLayout>
