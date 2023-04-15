@@ -52,7 +52,6 @@ public class ListFavoriteActivity extends AppCompatActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_list_favorite);
-        permission();
 
         btnBack = findViewById(R.id.btn_back_favorite);
         recyclerView = findViewById(R.id.rcv_data_favorite);

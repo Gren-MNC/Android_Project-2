@@ -34,6 +34,7 @@ public class MyService extends Service {
     private SongFireBase mSong;
     private int actionFromActivity;
     private int actionService;
+
     public static final int ACTION_PAUSE = 1;
     public static final int ACTION_RESUME = 2;
     public static final int ACTION_CLEAR = 3;
@@ -228,6 +229,7 @@ public class MyService extends Service {
         Intent intent = new Intent("send_data_to_activity");
         Bundle bundle = new Bundle();
         bundle.putInt("action_music",action);
+        bundle.putString("tenbaihat",mSong.getTitle());
         bundle.putSerializable("object_song",mSong);
         bundle.putBoolean("status_music",isPlaying);
         intent.putExtras(bundle);
