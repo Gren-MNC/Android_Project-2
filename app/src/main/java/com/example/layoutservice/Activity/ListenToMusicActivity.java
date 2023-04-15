@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,39 +27,43 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.bumptech.glide.Glide;
 import com.example.layoutservice.Models.MusicFiles;
 import com.example.layoutservice.Models.SongFireBase;
 import com.example.layoutservice.MyService;
 import com.example.layoutservice.R;
 import com.example.layoutservice.Receiver.BroadcastReceiver;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class ListenToMusicActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener{
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class ListenToMusicActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
     static Uri uri;
     private static final int REPEAT_ONE = 1;
     private static final int REPEAT_ALL = 2;
     private int repeat = REPEAT_ALL;
     private boolean shuffle = false;
+    private boolean isPlaying;
+    static MediaPlayer mediaPlayer = new MediaPlayer();
     Button btnPlay, btnNext, btnPre, btnList, btnBack, btnRepeat, btnShuffle;
     TextView tvName, tvSinger, tvStart, tvStop;
     ArrayList<SongFireBase> listSong;
     private SongFireBase mSong;
-    private int positionSelect;
     SeekBar seekMusic, seekVolume;
-    private int actionService, mCurrentPosition, durationTotal;
-    private boolean isPlaying;
-    static MediaPlayer mediaPlayer = new MediaPlayer();
-    private ImageView imgViewMusic;
+    private int actionService, mCurrentPosition, durationTotal, positionSelect;
+    private CircleImageView imgViewMusic;
     private ObjectAnimator animator;
     private AudioManager audioManager;
     private Handler handler = new Handler();
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver(){
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
-            if (bundle == null){
+            if (bundle == null) {
                 return;
             }
             actionService = bundle.getInt("action_music");
@@ -68,8 +73,7 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
     };
 
     private void handleActionFromService(int actionService) {
-        switch (actionService)
-        {
+        switch (actionService) {
             case ACTION_PAUSE:
                 mediaPlayer.pause();
                 animator.pause();
@@ -139,6 +143,7 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
         durationTotal = mediaPlayer.getDuration() / 1000;
         tvStop.setText(formatTime(durationTotal));
 
+
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
@@ -172,7 +177,7 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
         seekMusic.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (mediaPlayer != null && fromUser){
+                if (mediaPlayer != null && fromUser) {
                     mediaPlayer.seekTo(progress * 1000);
                 }
             }
@@ -190,7 +195,7 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
         ListenToMusicActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (mediaPlayer != null){
+                if (mediaPlayer != null) {
                     mCurrentPosition = mediaPlayer.getCurrentPosition() / 1000;
                     seekMusic.setProgress(mCurrentPosition);
                     tvStart.setText(formatTime(mCurrentPosition));
@@ -202,7 +207,7 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
             @Override
             public void onClick(View v) {
                 // pause
-                if(isPlaying == true){
+                if (isPlaying == true) {
                     mediaPlayer.pause();
                     clickStartService(ACTION_PAUSE);
                     isPlaying = false;
@@ -256,7 +261,7 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
         btnRepeat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (repeat){
+                switch (repeat) {
                     case REPEAT_ALL:
                         repeat = REPEAT_ONE;
                         btnRepeat.setBackgroundResource(R.drawable.repeat_one);
@@ -272,11 +277,10 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
         btnShuffle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (shuffle == false){
+                if (shuffle == false) {
                     shuffle = true;
                     btnShuffle.setBackgroundResource(R.drawable.shuffle_press);
-                }
-                else {
+                } else {
                     shuffle = false;
                     btnShuffle.setBackgroundResource(R.drawable.shuffle);
                 }
@@ -286,10 +290,9 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
 
     private void playNextMusic() {
         if (shuffle == true && repeat == REPEAT_ALL) {
-            positionSelect= getRandom(listSong.size()-1);
-        }
-        else if (shuffle == false && repeat == REPEAT_ALL){
-            positionSelect = (positionSelect+1) % listSong.size();
+            positionSelect = getRandom(listSong.size() - 1);
+        } else if (shuffle == false && repeat == REPEAT_ALL) {
+            positionSelect = (positionSelect + 1) % listSong.size();
         }
 
         mSong = listSong.get(positionSelect);
@@ -306,15 +309,14 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
 
     private int getRandom(int i) {
         Random random = new Random();
-        return random.nextInt(i+1);
+        return random.nextInt(i + 1);
     }
 
-    private void playPreMusic(){
+    private void playPreMusic() {
         if (shuffle == true && repeat == REPEAT_ALL) {
-            positionSelect= getRandom(listSong.size()-1);
-        }
-        else if (shuffle == false && repeat == REPEAT_ALL){
-            positionSelect = ((positionSelect-1)<0) ? (listSong.size()-1):(positionSelect-1);
+            positionSelect = getRandom(listSong.size() - 1);
+        } else if (shuffle == false && repeat == REPEAT_ALL) {
+            positionSelect = ((positionSelect - 1) < 0) ? (listSong.size() - 1) : (positionSelect - 1);
         }
         mSong = listSong.get(positionSelect);
         startMusic(mSong);
@@ -326,16 +328,17 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
 
         mediaPlayer.setOnCompletionListener(this);
     }
-    private void getIntentMethod(){
+
+    private void getIntentMethod() {
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
-        if(bundle != null) {
+        if (bundle != null) {
 
             positionSelect = bundle.getInt("position_key");
             listSong = (ArrayList<SongFireBase>) bundle.getSerializable("listSong_key");
 
             mSong = (SongFireBase) bundle.get("object_song");
-            if (mediaPlayer != null){
+            if (mediaPlayer != null) {
                 mediaPlayer.stop();
                 mediaPlayer.release();
             }
@@ -344,6 +347,7 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
 
         }
     }
+
     private void clickStartService(int actionMusic) {
 
         Intent intent = new Intent(this, MyService.class);
@@ -354,19 +358,22 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
         startService(intent);
 
     }
+
     private void startMusic(SongFireBase mSong) {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();
         }
 
-        uri  = Uri.parse(mSong.getSongUri());
-        mediaPlayer = MediaPlayer.create(getApplicationContext(),uri);
+        uri = Uri.parse(mSong.getSongUri());
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
 
         mediaPlayer.start();
         isPlaying = true;
+        Picasso.with(getApplicationContext()).load(mSong.getImage()).into(imgViewMusic);
     }
-    private String formatTime(int mCurrentPosition){
+
+    private String formatTime(int mCurrentPosition) {
         String totalOut = "";
         String totalNew = "";
         String seconds = String.valueOf(mCurrentPosition % 60);
@@ -375,8 +382,7 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
         totalNew = minutes + ":" + "0" + seconds;
         if (seconds.length() == 1) {
             return totalNew;
-        }
-        else{
+        } else {
             return totalOut;
         }
     }
@@ -386,9 +392,10 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
         playNextMusic();
         mediaPlayer.setOnCompletionListener(this);
     }
-    private void RotationAnimation(View view){
 
-        animator  = ObjectAnimator.ofFloat(imgViewMusic, "rotation", 0f, 360f);
+    private void RotationAnimation(View view) {
+
+        animator = ObjectAnimator.ofFloat(imgViewMusic, "rotation", 0f, 360f);
         animator.setDuration(10000);
         animator.setRepeatCount(INFINITE);
 

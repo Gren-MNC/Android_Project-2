@@ -32,10 +32,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Single"
-            android:textColor="#fff"
+            android:textColor="@color/white"
             android:layout_toRightOf="@id/imv_music"
             android:layout_below="@id/tvName"
-            android:textSize="18dp" />
+            android:textSize="15dp" />
 
     </LinearLayout>
     <LinearLayout

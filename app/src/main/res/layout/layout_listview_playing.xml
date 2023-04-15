@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/imv_music"
             android:text="Music"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="20dp"/>
         <TextView
             android:id="@+id/tvSingle"
@@ -33,6 +33,7 @@
             android:text="Single"
             android:layout_toRightOf="@id/imv_music"
             android:layout_below="@id/tvName"
+            android:textColor="@color/white"
             android:textSize="18dp" />
 
     </LinearLayout>

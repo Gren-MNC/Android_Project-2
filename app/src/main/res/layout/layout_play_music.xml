@@ -12,16 +12,16 @@
         android:id="@+id/btn_back_playing"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="@drawable/ic_back"/>
-    <ImageView
+        android:background="@drawable/ic_back"
+        android:contentDescription="back"/>
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_music"
-        android:layout_width="wrap_content"
-        android:layout_height="286dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:layout_below="@id/btn_back_playing"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="80dp"
+        android:layout_centerInParent="true"
         android:layout_marginTop="10dp"
-        android:src="@drawable/music" />
+        android:background="@drawable/music" />
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_below="@+id/img_music"
@@ -149,7 +149,6 @@
         android:layout_below="@+id/seekbar"
         android:layout_marginTop="45dp"
         android:layout_marginEnd="30dp"
-        android:layout_marginRight="40dp"
         android:layout_toStartOf="@+id/btn_previous_main"
         android:layout_toLeftOf="@+id/btn_previous_main"
         android:background="@drawable/shuffle"

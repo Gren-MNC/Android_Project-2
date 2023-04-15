@@ -175,8 +175,8 @@ public class MyService extends Service {
                 .setContentText(mSong.getSinger())
                 .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap).bigLargeIcon(bitmap))
                 .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
-                        .setShowActionsInCompactView(0,1,2 /* #1: pause button */)
-                        .setMediaSession(mediaSessionCompat.getSessionToken()));
+                       .setShowActionsInCompactView(0,1,2 /* #1: pause button */)
+                       .setMediaSession(mediaSessionCompat.getSessionToken()));
 
 
         if(isPlaying){

@@ -14,12 +14,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.layoutservice.Adapter.SongPlayingAdapter;
 import com.example.layoutservice.Models.MusicFiles;
+import com.example.layoutservice.Models.SongFireBase;
 import com.example.layoutservice.R;
 
 import java.util.ArrayList;
 
 public class ListSongPlayingActivity extends AppCompatActivity {
-    private ArrayList<MusicFiles> listSong;
+    private ArrayList<SongFireBase> listSong;
     private Button btnBack;
     private RecyclerView recyclerView;
     private SongPlayingAdapter songPlayingAdapter;
@@ -42,7 +43,7 @@ public class ListSongPlayingActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
 
         if (bundle != null) {
-            listSong = (ArrayList<MusicFiles>) bundle.getSerializable("listSong_key");
+            listSong = (ArrayList<SongFireBase>) bundle.getSerializable("listSong_key");
         }
         songPlayingAdapter = new SongPlayingAdapter(this,  listSong);
         recyclerView.setAdapter(songPlayingAdapter);

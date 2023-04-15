@@ -17,14 +17,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.layoutservice.Activity.ListenToMusicActivity;
 import com.example.layoutservice.Models.MusicFiles;
+import com.example.layoutservice.Models.SongFireBase;
 import com.example.layoutservice.R;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class SongPlayingAdapter extends RecyclerView.Adapter<SongPlayingAdapter.SongPlayingHolder> {
 
-    private ArrayList<MusicFiles> musicFilesArrayList;
+    private ArrayList<SongFireBase> musicFilesArrayList;
     private Context context;
     private int positionSelect = -1;
 
@@ -38,23 +40,13 @@ public class SongPlayingAdapter extends RecyclerView.Adapter<SongPlayingAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull SongPlayingHolder holder, int position) {
-        MusicFiles mFiles = musicFilesArrayList.get(position);
+        SongFireBase mFiles = musicFilesArrayList.get(position);
         if(mFiles == null){
             return;
         }
         holder.txtSong.setText(mFiles.getTitle());
-        holder.txtSingle.setText(mFiles.getArtist());
-        byte[] image = getAlbumArt(mFiles.getPath());
-        if(image != null){
-            Glide.with(context).asBitmap()
-                    .load(image)
-                    .into(holder.imgAva);
-        }
-        else {
-            Glide.with(context)
-                    .load(R.drawable.ic_music)
-                    .into(holder.imgAva);
-        }
+        holder.txtSingle.setText(mFiles.getSinger());
+        Picasso.with(holder.imgAva.getContext()).load(mFiles.getImage()).into(holder.imgAva);
         holder.layout_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,7 +62,7 @@ public class SongPlayingAdapter extends RecyclerView.Adapter<SongPlayingAdapter.
             }
         });
     }
-    public SongPlayingAdapter(Context context, ArrayList<MusicFiles> musicFiles){
+    public SongPlayingAdapter(Context context, ArrayList<SongFireBase> musicFiles){
         this.context = context;
         this.musicFilesArrayList = musicFiles;
     }
@@ -97,17 +89,7 @@ public class SongPlayingAdapter extends RecyclerView.Adapter<SongPlayingAdapter.
 
         }
     }
-    private byte[] getAlbumArt(String uri){
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(uri);
-        byte[] art = retriever.getEmbeddedPicture();
-        try {
-            retriever.release();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return art;
-    }
+
 
 
 }
