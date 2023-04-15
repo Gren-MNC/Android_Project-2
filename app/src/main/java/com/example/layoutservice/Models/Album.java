@@ -12,15 +12,17 @@ public class Album implements Serializable {
 
 private String tenAlbum;
 private String tenCaSiAlbum;
-private Uri hinhAlbum;
+private String hinhAlbum;
 private List<SongFireBase> AlbumList;
 
-    public Album(String tenAlbum, String tenCaSiAlbum, Uri hinhAlbum, List<SongFireBase> albumList) {
+    public Album(String tenAlbum, String tenCaSiAlbum, String hinhAlbum, List<SongFireBase> albumList) {
         this.tenAlbum = tenAlbum;
         this.tenCaSiAlbum = tenCaSiAlbum;
         this.hinhAlbum = hinhAlbum;
         AlbumList = albumList;
     }
+
+    public Album() {}
 
     public String getTenAlbum() {
         return tenAlbum;
@@ -38,11 +40,11 @@ private List<SongFireBase> AlbumList;
         this.tenCaSiAlbum = tenCaSiAlbum;
     }
 
-    public Uri getHinhAlbum() {
+    public String getHinhAlbum() {
         return hinhAlbum;
     }
 
-    public void setHinhAlbum(Uri hinhAlbum) {
+    public void setHinhAlbum(String hinhAlbum) {
         this.hinhAlbum = hinhAlbum;
     }
 
