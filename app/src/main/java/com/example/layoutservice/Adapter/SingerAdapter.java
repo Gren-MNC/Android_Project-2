@@ -21,6 +21,7 @@ import com.example.layoutservice.Activity.ListenToMusicActivity;
 import com.example.layoutservice.Models.MusicFiles;
 import com.example.layoutservice.Models.Singer;
 import com.example.layoutservice.R;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,6 +34,12 @@ public class SingerAdapter extends RecyclerView.Adapter<SingerAdapter.SingerHold
     private int positionSelect = -1;
 
 
+    public SingerAdapter(Context context,ArrayList<Singer> listSinger){
+        this.listSinger = listSinger;
+        this.context = context;
+    }
+
+
     @NonNull
     @Override
     public SingerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -43,31 +50,24 @@ public class SingerAdapter extends RecyclerView.Adapter<SingerAdapter.SingerHold
     @Override
     public void onBindViewHolder(@NonNull SingerHolder holder, int position) {
         Singer mSinger = listSinger.get(position);
-        holder.txtArtist.setText(mSinger.getName());
-        byte[] image = getAlbumArt(mSinger.getPath());
-        if(image != null){
-            Glide.with(context).asBitmap()
-                    .load(image)
-                    .into(holder.imgAva);
-        }
-        else {
-            Glide.with(context)
-                    .load(R.drawable.ic_music)
-                    .into(holder.imgAva);
+        if(mSinger == null){
+            return ;
         }
 
+        holder.txtArtist.setText(mSinger.getNameSinger());
+        Picasso.with(holder.imgAva.getContext()).load(mSinger.getImageSinger()).into(holder.imgAva);
         holder.layout_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, ListSongSingleActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("objectName",mSinger);
+                bundle.putSerializable("Song_List",mSinger.getListSong());
+                bundle.putInt("position_key",holder.getAdapterPosition() );
+                intent.putExtras(bundle);
                 context.startActivity(intent);
             }
         });
-    }
-
-    public SingerAdapter(Context context,ArrayList<Singer> listSinger){
-        this.listSinger = listSinger;
-        this.context = context;
     }
 
 
@@ -96,17 +96,7 @@ public class SingerAdapter extends RecyclerView.Adapter<SingerAdapter.SingerHold
 
         }
     }
-    private byte[] getAlbumArt(String uri){
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(uri);
-        byte[] art = retriever.getEmbeddedPicture();
-        try {
-            retriever.release();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return art;
-    }
+
 
 
 }

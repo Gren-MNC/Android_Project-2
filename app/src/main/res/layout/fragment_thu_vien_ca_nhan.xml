@@ -137,7 +137,7 @@
                 android:lines="2"
                 android:maxWidth="200dp"
                 android:maxLines="2"
-                android:text="Ca sĩ yêu thích"
+                android:text="Nghệ sĩ"
                 android:textAlignment="center"
                 android:textColor="#ffff"
                 android:textSize="15sp"

@@ -25,6 +25,7 @@
 <!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="wrap_content"-->
 <!--            tools:layout="@layout/fragment_banner" />-->
+
         <fragment
             android:id="@+id/fragment_lib"
             android:name="com.example.layoutservice.Fragment.Fragment_Thu_vien_ca_nhan"

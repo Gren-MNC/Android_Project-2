@@ -1,40 +1,40 @@
 package com.example.layoutservice.Models;
 
-public class Singer {
-    private int idSinger;
-    private String name;
-    private String path;
+import java.io.Serializable;
+import java.util.ArrayList;
 
-    public Singer(int idSinger, String name, String path) {
-        this.idSinger = idSinger;
-        this.name = name;
-
-        this.path = path;
+public class Singer implements Serializable {
+    private String nameSinger;
+    private String imageSinger;
+    private ArrayList<SongFireBase> ListSong;
+    public Singer(String nameSinger, String imageSinger, ArrayList<SongFireBase> listSong) {
+        this.nameSinger = nameSinger;
+        this.imageSinger = imageSinger;
+        ListSong = listSong;
     }
     public Singer(){}
 
-    public int getIdSinger() {
-        return idSinger;
+    public String getNameSinger() {
+        return nameSinger;
     }
 
-    public void setIdSinger(int idSinger) {
-        this.idSinger = idSinger;
+    public void setNameSinger(String nameSinger) {
+        this.nameSinger = nameSinger;
     }
 
-    public String getPath() {
-        return path;
+    public String getImageSinger() {
+        return imageSinger;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setImageSinger(String imageSinger) {
+        this.imageSinger = imageSinger;
     }
 
-    public String getName() {
-        return name;
+    public ArrayList<SongFireBase> getListSong() {
+        return ListSong;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setListSong(ArrayList<SongFireBase> listSong) {
+        ListSong = listSong;
     }
-
 }

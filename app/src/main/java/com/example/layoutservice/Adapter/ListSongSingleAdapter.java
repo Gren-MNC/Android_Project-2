@@ -31,7 +31,7 @@ public class ListSongSingleAdapter extends RecyclerView.Adapter<ListSongSingleAd
     @NonNull
     @Override
     public ListSongSingleHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_sub_single, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.all_album_items, parent,false);
         return new ListSongSingleHolder(view);
     }
     public ListSongSingleAdapter(Context context,ArrayList<Song> songList){

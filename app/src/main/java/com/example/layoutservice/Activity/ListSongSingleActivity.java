@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,7 +38,9 @@ import com.bumptech.glide.Glide;
 
 import com.example.layoutservice.Adapter.FirebaseSongAdapter;
 import com.example.layoutservice.Adapter.MusicFileAdapter;
+import com.example.layoutservice.Models.Album;
 import com.example.layoutservice.Models.MusicFiles;
+import com.example.layoutservice.Models.Singer;
 import com.example.layoutservice.Models.SongFireBase;
 import com.example.layoutservice.MyService;
 import com.example.layoutservice.R;
@@ -45,48 +50,32 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListSongSingleActivity extends AppCompatActivity {
-    private List<MusicFiles> listSong = new ArrayList<>();
+    private List<SongFireBase> listSong = new ArrayList<>();
     public static final int REQUEST_CODE = 1;
-    ArrayList<MusicFiles> musicFiles;
-    ArrayAdapter<String> adapter;
-    private static final int MY_PERMISSION_REQUEST = 1;
-    ArrayList<String> arrayList;
-    private ListView listView;
-    private Button btnStart, btnBack;
-    private Button btnStop;
-    private MusicFiles mSong;
-    private ImageView imgPauseOrPlay;
-    private ImageView imgCancel, imgSong;
-    private RelativeLayout relativeLayout;
-    private TextView tvSong, tvSingle;
+
+    private Button btnBack;
+
     private boolean isPlaying;
-    private RecyclerView recyclerView;
-    private MusicFileAdapter musicFileAdapter;
+    private int positionSelect;
     View view;
+    RecyclerView recyclerView;
+    private Singer singer;
+    private TextView view_name_singer;
     ArrayList<SongFireBase> songFireBaseArrayList;
     FirebaseSongAdapter firebaseSongAdapter;
     FirebaseDatabase db;
     DatabaseReference databaseReference;
+    RelativeLayout background_singer;
     Context context;
 
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Bundle bundle = intent.getExtras();
-            if (bundle == null) {
-                return;
-            }
-            mSong = (MusicFiles) bundle.get("object_song");
-            isPlaying = bundle.getBoolean("status_music");
-            int action = bundle.getInt("action_music");
-        }
-    };
 
 
     @Override
@@ -95,33 +84,49 @@ public class ListSongSingleActivity extends AppCompatActivity {
         setContentView(R.layout.layout_single);
         recyclerView = findViewById(R.id.rcv_data);
         btnBack = findViewById(R.id.btn_back_singer);
+        view_name_singer = findViewById(R.id.view_name_singer);
+        background_singer = findViewById(R.id.background_single);
+        positionSelect = 1;
+        Intent intent = this.getIntent();
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+            positionSelect = bundle.getInt("position_key");
+            singer = (Singer) bundle.getSerializable("objectName");
+            listSong = (ArrayList<SongFireBase>) bundle.getSerializable("Song_List");
+            view_name_singer.setText(singer.getNameSinger());
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("SongFireBase");
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        songFireBaseArrayList = new ArrayList<>();
-        firebaseSongAdapter = new FirebaseSongAdapter(context, songFireBaseArrayList);
+            ArrayList<SongFireBase> songs = new ArrayList<>(listSong);
 
-        recyclerView.setAdapter(firebaseSongAdapter);
+            FirebaseSongAdapter firebaseSongAdapter = new FirebaseSongAdapter(this, songs);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            recyclerView.setAdapter(firebaseSongAdapter);
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    SongFireBase songFireBase = dataSnapshot.getValue(SongFireBase.class);
-                    songFireBaseArrayList.add(songFireBase);
-                }
-                firebaseSongAdapter = new FirebaseSongAdapter(ListSongSingleActivity.this,songFireBaseArrayList);
-                recyclerView.setAdapter(firebaseSongAdapter);
-                firebaseSongAdapter.notifyDataSetChanged();
-            }
+            Picasso.with(ListSongSingleActivity.this)
+                    .load(singer.getImageSinger())
+                    .into(new Target() {
+                        @Override
+                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                            int sdk = android.os.Build.VERSION.SDK_INT;
+                            if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                                background_singer.setBackgroundDrawable(new BitmapDrawable(bitmap));
+                            } else {
+                                background_singer.setBackground(new BitmapDrawable(getResources(), bitmap));
+                            }
+                        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onBitmapFailed(Drawable errorDrawable) {
+                            Toast.makeText(ListSongSingleActivity.this, "Error in img", Toast.LENGTH_SHORT).show();
+                        }
 
-            }
-        });
+                        @Override
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+                            // use placeholder drawable if desired
+                            Toast.makeText(ListSongSingleActivity.this, "Error in img", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,81 +138,11 @@ public class ListSongSingleActivity extends AppCompatActivity {
 
     }
 
-    private void permission() {
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(ListSongSingleActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
-        } else {
-            Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
-            musicFiles = getAllAudio(this);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
-                musicFiles = getAllAudio(this);
-            } else {
-                ActivityCompat.requestPermissions(ListSongSingleActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
-            }
-        }
-    }
-
-    public static ArrayList<MusicFiles> getAllAudio(Context context) {
-        ArrayList<MusicFiles> tempAudioList = new ArrayList<>();
-        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = {
-                MediaStore.Audio.Media.ALBUM,
-                MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.DURATION,
-                MediaStore.Audio.Media.DATA,
-                MediaStore.Audio.Media.ARTIST
-        };
-        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                String album = cursor.getString(0);
-                String title = cursor.getString(1);
-                String duration = cursor.getString(2);
-                String path = cursor.getString(3);
-                String artist = cursor.getString(4);
-
-                MusicFiles musicFiles = new MusicFiles(path, title, artist, album, duration);
-                Log.e("Path: " + path, "Album: " + album);
-                tempAudioList.add(musicFiles);
-            }
-            cursor.close();
-        }
-        return tempAudioList;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
-    }
-
-    private byte[] getAlbumArt(String uri){
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(uri);
-        byte[] art = retriever.getEmbeddedPicture();
-        try {
-            retriever.release();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return art;
-    }
-
-    private void sendActionToService(int action) {
-        Intent intent = new Intent(this,MyService.class);
-        intent.putExtra("action_music_service",action);
-        startService(intent);
-    }
 
 
-
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+//    }
 }
