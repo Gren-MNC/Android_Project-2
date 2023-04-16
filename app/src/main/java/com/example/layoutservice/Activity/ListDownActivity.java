@@ -1,8 +1,12 @@
 package com.example.layoutservice.Activity;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 import android.Manifest;
-import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -22,31 +26,24 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.layoutservice.Adapter.FirebaseSongAdapter;
 import com.example.layoutservice.Adapter.SongDownAdapter;
-import com.example.layoutservice.Models.MusicFiles;
+
 import com.example.layoutservice.Models.SongFireBase;
 import com.example.layoutservice.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListDownActivity extends AppCompatActivity {
-    private List<MusicFiles> listSong = new ArrayList<>();
+
+
+    private List<SongFireBase> listSong = new ArrayList<>();
     public static final int REQUEST_CODE = 1;
-    ArrayList<MusicFiles> musicFiles;
+    ArrayList<SongFireBase> musicFiles;
     private Button btnBack;
     private RecyclerView recyclerView;
     private SongDownAdapter songDownAdapter;
-    ArrayList<SongFireBase> songFireBaseArrayList;
-    FirebaseSongAdapter firebaseSongAdapter;
-    FirebaseDatabase db;
-    DatabaseReference databaseReference;
+
     Context context;
 
     @Override
@@ -57,32 +54,16 @@ public class ListDownActivity extends AppCompatActivity {
 
         btnBack = findViewById(R.id.btn_back_down);
         recyclerView = findViewById(R.id.rcv_data_down);
-        databaseReference = FirebaseDatabase.getInstance().getReference("SongFireBase");
-        recyclerView.setHasFixedSize(true);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        songFireBaseArrayList = new ArrayList<>();
-        firebaseSongAdapter = new FirebaseSongAdapter(context, songFireBaseArrayList);
 
-        recyclerView.setAdapter(firebaseSongAdapter);
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(itemDecoration);
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    SongFireBase songFireBase = dataSnapshot.getValue(SongFireBase.class);
-                    songFireBaseArrayList.add(songFireBase);
-                }
-                firebaseSongAdapter = new FirebaseSongAdapter(ListDownActivity.this,songFireBaseArrayList);
-                recyclerView.setAdapter(firebaseSongAdapter);
-                firebaseSongAdapter.notifyDataSetChanged();
-            }
+        songDownAdapter = new SongDownAdapter(context, musicFiles);
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+        recyclerView.setAdapter(songDownAdapter);
 
-            }
-        });
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,11 +73,12 @@ public class ListDownActivity extends AppCompatActivity {
         });
 
     }
+
     private void permission() {
-        if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if(ContextCompat.checkSelfPermission(getApplicationContext(), READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED)
         {
-            ActivityCompat.requestPermissions(ListDownActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
+            ActivityCompat.requestPermissions(ListDownActivity.this,new String[]{READ_EXTERNAL_STORAGE},REQUEST_CODE);
         }
         else {
             Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
@@ -118,27 +100,26 @@ public class ListDownActivity extends AppCompatActivity {
             }
         }
     }
-    public static ArrayList<MusicFiles> getAllAudio(Context context){
-        ArrayList<MusicFiles> tempAudioList = new ArrayList<>();
+    public static ArrayList<SongFireBase> getAllAudio(Context context){
+        ArrayList<SongFireBase> tempAudioList = new ArrayList<>();
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String[] projection = {
-                MediaStore.Audio.Media.ALBUM,
                 MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.DURATION,
-                MediaStore.Audio.Media.DATA,
-                MediaStore.Audio.Media.ARTIST
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.ALBUM,
+                MediaStore.Audio.Media.DATA
         };
-        Cursor cursor = context.getContentResolver().query(uri,projection,null,null,null);
+        Cursor cursor = context.getContentResolver().query(uri,projection,
+                null,null,null);
         if(cursor != null)
         {
             while (cursor.moveToNext()){
-                String album = cursor.getString(0);
-                String title = cursor.getString(1);
-                String duration = cursor.getString(2);
+                String title = cursor.getString(0);
+                String artist = cursor.getString(1);
+                String album = cursor.getString(2);
                 String path = cursor.getString(3);
-                String artist = cursor.getString(4);
 
-                MusicFiles musicFiles = new MusicFiles(path,title,artist,album,duration);
+                SongFireBase musicFiles = new SongFireBase(title,artist,album,path);
                 Log.e("Path: "+path,"Album: "+album);
                 tempAudioList.add(musicFiles);
             }

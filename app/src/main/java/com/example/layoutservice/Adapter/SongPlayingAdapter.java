@@ -46,7 +46,7 @@ public class SongPlayingAdapter extends RecyclerView.Adapter<SongPlayingAdapter.
         }
         holder.txtSong.setText(mFiles.getTitle());
         holder.txtSingle.setText(mFiles.getSinger());
-        Picasso.with(holder.imgAva.getContext()).load(mFiles.getImage()).into(holder.imgAva);
+
         holder.layout_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

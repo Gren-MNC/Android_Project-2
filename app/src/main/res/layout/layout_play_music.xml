@@ -14,6 +14,14 @@
         android:layout_height="50dp"
         android:background="@drawable/ic_back"
         android:contentDescription="back"/>
+    <Button
+        android:id="@+id/btn_home"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignBaseline="@id/btn_back_playing"
+        android:background="@drawable/ic_home"
+        android:contentDescription="home"
+        android:layout_alignParentEnd="true"/>
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_music"
         android:layout_width="300dp"
@@ -36,6 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/img_music"
             android:layout_marginTop="20dp"
+            android:gravity="center"
             android:fontFamily="serif"
             android:text="Song Name"
             android:textAllCaps="true"

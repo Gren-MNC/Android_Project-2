@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,13 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.layoutservice.Activity.ListenToMusicActivity;
 import com.example.layoutservice.Models.MusicFiles;
+import com.example.layoutservice.Models.SongFireBase;
 import com.example.layoutservice.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class SongDownAdapter extends RecyclerView.Adapter<SongDownAdapter.SongDownHolder> {
-    private ArrayList<MusicFiles> musicFilesArrayList;
+    private final ArrayList<SongFireBase> musicFilesArrayList;
     private Context context;
     private int positionSelect = -1;
     @NonNull
@@ -35,20 +35,20 @@ public class SongDownAdapter extends RecyclerView.Adapter<SongDownAdapter.SongDo
     }
     @Override
     public void onBindViewHolder(@NonNull SongDownHolder holder, int position) {
-        MusicFiles mFiles = musicFilesArrayList.get(position);
+        SongFireBase mFiles = musicFilesArrayList.get(position);
         if(mFiles == null){
             return;
         }
         holder.txtSong.setText(mFiles.getTitle());
-        holder.txtSingle.setText(mFiles.getArtist());
-        byte[] image = getAlbumArt(mFiles.getPath());
+        holder.txtSingle.setText(mFiles.getSinger());
+        byte[] image = getAlbumArt(mFiles.getSongUri());
         if(image != null){
-            Glide.with(context).asBitmap()
+            Glide.with(holder.txtSong.getContext()).asBitmap()
                     .load(image)
                     .into(holder.imgAva);
         }
         else {
-            Glide.with(context)
+            Glide.with(holder.txtSong.getContext())
                     .load(R.drawable.ic_music)
                     .into(holder.imgAva);
         }
@@ -56,19 +56,21 @@ public class SongDownAdapter extends RecyclerView.Adapter<SongDownAdapter.SongDo
             @Override
             public void onClick(View view) {
                 positionSelect = holder.getAdapterPosition();
+                boolean isListDownload = true;
 
-                Intent intent = new Intent(context, ListenToMusicActivity.class);
+                Intent intent = new Intent(holder.layout_item.getContext(), ListenToMusicActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("object_song",mFiles);
                 bundle.putSerializable("listSong_key", musicFilesArrayList);
                 bundle.putInt("position_key", positionSelect);
+                bundle.putBoolean("list_download_key", isListDownload);
                 intent.putExtras(bundle);
-                context.startActivity(intent);
+                holder.layout_item.getContext().startActivity(intent);
             }
         });
     }
 
-    public SongDownAdapter(Context context,ArrayList<MusicFiles> musicFilesArrayList){
+    public SongDownAdapter(Context context, ArrayList<SongFireBase> musicFilesArrayList){
         this.musicFilesArrayList = musicFilesArrayList;
         this.context = context;
     }

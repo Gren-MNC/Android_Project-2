@@ -1,12 +1,16 @@
 package com.example.layoutservice.Adapter;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -79,6 +83,26 @@ public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapte
                 context.startActivity(intent);
             }
         });
+        holder.btnDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String path = String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
+
+                downloadSong(context, songFireBase.getTitle(),".mp3",
+                        path, songFireBase.getSongUri());
+
+            }
+        });
+    }
+    public void downloadSong(Context context1, String filename, String fileExtension, String destinationDirectory, String url){
+        DownloadManager downloadManager = (DownloadManager) context1.getSystemService(Context.DOWNLOAD_SERVICE);
+        Uri uri = Uri.parse(url);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir(destinationDirectory, filename + fileExtension);
+
+        downloadManager.enqueue(request);
     }
 
     @Override
@@ -91,6 +115,7 @@ public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapte
         private TextView txtSong;
         private TextView txtSingle;
         private LinearLayout layout_item;
+        private Button btnDownload;
 
         public FirebaseHolder(@NonNull View v, ViewGroup viewGroup) {
             super(v);
@@ -99,6 +124,7 @@ public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapte
             txtSingle = v.findViewById(R.id.tv_single);
             txtSong = v.findViewById(R.id.tv_song);
             imgAva = v.findViewById(R.id.img_song);
+            btnDownload = v.findViewById(R.id.btn_download);
         }
     }
 }

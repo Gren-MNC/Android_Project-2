@@ -9,6 +9,7 @@ import static com.example.layoutservice.MyService.ACTION_RESUME;
 import static com.example.layoutservice.MyService.ACTION_START;
 
 import android.animation.ObjectAnimator;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -17,6 +18,7 @@ import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
@@ -48,8 +50,9 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
     private int repeat = REPEAT_ALL;
     private boolean shuffle = false;
     private boolean isPlaying;
+    private boolean isListDownload;
     static MediaPlayer mediaPlayer = new MediaPlayer();
-    Button btnPlay, btnNext, btnPre, btnList, btnBack, btnRepeat, btnShuffle;
+    Button btnPlay, btnNext, btnPre, btnList, btnBack, btnRepeat, btnShuffle, btnBackHome, btnDownload;
     TextView tvName, tvSinger, tvStart, tvStop;
     ArrayList<SongFireBase> listSong;
     private SongFireBase mSong;
@@ -118,6 +121,8 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
         btnBack = findViewById(R.id.btn_back_playing);
         btnRepeat = findViewById(R.id.btn_repeat);
         btnShuffle = findViewById(R.id.btn_shuffle);
+        btnBackHome = findViewById(R.id.btn_home);
+        btnDownload = findViewById(R.id.btn_down);
 
         tvName = findViewById(R.id.title_song);
         tvSinger = findViewById(R.id.single);
@@ -252,6 +257,14 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
 
             }
         });
+        btnBackHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ListenToMusicActivity.this, MainActivity.class);
+                startActivity(intent);
+
+            }
+        });
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -284,6 +297,15 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
                     shuffle = false;
                     btnShuffle.setBackgroundResource(R.drawable.shuffle);
                 }
+            }
+        });
+        btnDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String path = String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
+
+                downloadSong(getApplicationContext(), mSong.getTitle(),".mp3",
+                        path, mSong.getSongUri());
             }
         });
     }
@@ -336,6 +358,7 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
 
             positionSelect = bundle.getInt("position_key");
             listSong = (ArrayList<SongFireBase>) bundle.getSerializable("listSong_key");
+            isListDownload = bundle.getBoolean("list_download_key", false);
 
             mSong = (SongFireBase) bundle.get("object_song");
             if (mediaPlayer != null) {
@@ -370,7 +393,22 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
 
         mediaPlayer.start();
         isPlaying = true;
-        Picasso.with(getApplicationContext()).load(mSong.getImage()).into(imgViewMusic);
+
+        if(isListDownload == true){
+            byte[] image = getAlbumArt(mSong.getSongUri());
+            if(image != null){
+                Glide.with(getApplicationContext()).asBitmap()
+                        .load(image)
+                        .into(imgViewMusic);
+            }
+            else {
+                Glide.with(getApplicationContext())
+                        .load(R.drawable.ic_music)
+                        .into(imgViewMusic);
+            }
+        } else {
+            Picasso.with(getApplicationContext()).load(mSong.getImage()).into(imgViewMusic);
+        }
     }
 
     private String formatTime(int mCurrentPosition) {
@@ -399,6 +437,27 @@ public class ListenToMusicActivity extends AppCompatActivity implements MediaPla
         animator.setDuration(10000);
         animator.setRepeatCount(INFINITE);
 
+    }
+    private byte[] getAlbumArt(String uri){
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(uri);
+        byte[] art = retriever.getEmbeddedPicture();
+        try {
+            retriever.release();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return art;
+    }
+    public void downloadSong(Context context1, String filename, String fileExtension, String destinationDirectory, String url){
+        DownloadManager downloadManager = (DownloadManager) context1.getSystemService(Context.DOWNLOAD_SERVICE);
+        Uri uri = Uri.parse(url);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir(destinationDirectory, filename + fileExtension);
+
+        downloadManager.enqueue(request);
     }
 }
 
