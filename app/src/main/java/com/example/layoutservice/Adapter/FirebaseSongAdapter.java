@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -43,10 +45,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapter.FirebaseHolder> {
+public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapter.FirebaseHolder> implements Filterable {
 
     private Context context;
     private ArrayList<SongFireBase> songFireBasesList;
+    private ArrayList<SongFireBase> filterList;
     private int positionSelect = -1;
     DatabaseReference databaseReference;
 
@@ -60,6 +63,7 @@ public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapte
 
     public FirebaseSongAdapter(Context context, ArrayList<SongFireBase> songFireBasesList) {
         this.songFireBasesList = songFireBasesList;
+        this.filterList = songFireBasesList;
         this.context = context;
     }
 
@@ -153,6 +157,8 @@ public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapte
         return songFireBasesList.size();
     }
 
+
+
     public static class FirebaseHolder extends RecyclerView.ViewHolder {
 
         private ImageView imgAva;
@@ -172,5 +178,40 @@ public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapte
             btnDownload = v.findViewById(R.id.btn_download);
             btnFavorite = v.findViewById(R.id.btn_favorite);
         }
+    }
+
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String strSearch = charSequence.toString();
+                if(strSearch.isEmpty()){
+                    songFireBasesList = filterList;
+                }
+                else {
+                    ArrayList<SongFireBase> list = new ArrayList<>();
+                    for(SongFireBase song : filterList){
+                        if(song.getTitle().toLowerCase().contains(strSearch.toLowerCase())){
+                            list.add(song);
+                        }
+                    }
+
+                    songFireBasesList = list;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = songFireBasesList;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+
+                songFireBasesList = (ArrayList<SongFireBase>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 }

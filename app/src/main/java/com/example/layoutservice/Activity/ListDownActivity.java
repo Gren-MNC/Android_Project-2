@@ -118,8 +118,7 @@ public class ListDownActivity extends AppCompatActivity {
                 String artist = cursor.getString(1);
                 String album = cursor.getString(2);
                 String path = cursor.getString(3);
-                Boolean isFa = Boolean.parseBoolean(cursor.getString(4));
-                SongFireBase musicFiles = new SongFireBase(title,artist,album,path, isFa);
+                SongFireBase musicFiles = new SongFireBase(title,artist,album,path);
                 Log.e("Path: "+path,"Album: "+album);
                 tempAudioList.add(musicFiles);
             }
