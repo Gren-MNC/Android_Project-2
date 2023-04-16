@@ -41,12 +41,12 @@ public class SongFireBase implements Serializable {
         isFavorite = favorite;
     }
 
-    public SongFireBase(String title, String singer, String image, String songUri) {
+    public SongFireBase(String title, String singer, String image, String songUri, boolean isFavorite) {
         this.title = title;
         this.singer = singer;
         this.image = image;
         this.songUri = songUri;
-        this.isFavorite = false;
+        this.isFavorite = isFavorite;
     }
 
     public String getImage() {

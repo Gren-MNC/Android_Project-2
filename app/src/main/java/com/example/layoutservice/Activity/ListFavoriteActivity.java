@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.layoutservice.Adapter.FirebaseSongAdapter;
 import com.example.layoutservice.Adapter.SongFavoriteAdapter;
 import com.example.layoutservice.Models.MusicFiles;
+import com.example.layoutservice.Models.Song;
 import com.example.layoutservice.Models.SongFireBase;
 import com.example.layoutservice.R;
 import com.google.firebase.database.DataSnapshot;
@@ -48,6 +49,7 @@ public class ListFavoriteActivity extends AppCompatActivity {
     FirebaseDatabase db;
     DatabaseReference databaseReference;
     Context context;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,17 +70,25 @@ public class ListFavoriteActivity extends AppCompatActivity {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     SongFireBase songFireBase = dataSnapshot.getValue(SongFireBase.class);
                     assert songFireBase != null;
-                    if(songFireBase.isFavorite() == true) {
-                        songFireBaseArrayList.add(songFireBase);
-                    }
+
+                    songFireBaseArrayList.add(songFireBase);
                 }
 
+                ArrayList<SongFireBase> songList = new ArrayList<>();
+                for(SongFireBase s: songFireBaseArrayList){
+                    if (s.isFavorite()){
+                        songList.add(s);
+                    }
+                }
+//                Toast.makeText(ListFavoriteActivity.this, String.valueOf(songList.size()), Toast.LENGTH_SHORT).show();
 
-                firebaseSongAdapter = new FirebaseSongAdapter(ListFavoriteActivity.this,songFireBaseArrayList);
+                firebaseSongAdapter = new FirebaseSongAdapter(ListFavoriteActivity.this, songList);
                 recyclerView.setAdapter(firebaseSongAdapter);
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
                 firebaseSongAdapter.notifyDataSetChanged();
             }
 
@@ -96,14 +106,13 @@ public class ListFavoriteActivity extends AppCompatActivity {
         });
 
     }
+
     private void permission() {
-        if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(ListFavoriteActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
-        }
-        else {
-           // Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(ListFavoriteActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
+        } else {
+            // Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
             musicFiles = getAllAudio(this);
         }
     }
@@ -111,18 +120,17 @@ public class ListFavoriteActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CODE){
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
-               // Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
+        if (requestCode == REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
                 musicFiles = getAllAudio(this);
-            }
-            else {
-                ActivityCompat.requestPermissions(ListFavoriteActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
+            } else {
+                ActivityCompat.requestPermissions(ListFavoriteActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
             }
         }
     }
-    public static ArrayList<MusicFiles> getAllAudio(Context context){
+
+    public static ArrayList<MusicFiles> getAllAudio(Context context) {
         ArrayList<MusicFiles> tempAudioList = new ArrayList<>();
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String[] projection = {
@@ -132,18 +140,17 @@ public class ListFavoriteActivity extends AppCompatActivity {
                 MediaStore.Audio.Media.DATA,
                 MediaStore.Audio.Media.ARTIST
         };
-        Cursor cursor = context.getContentResolver().query(uri,projection,null,null,null);
-        if(cursor != null)
-        {
-            while (cursor.moveToNext()){
+        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
                 String album = cursor.getString(0);
                 String title = cursor.getString(1);
                 String duration = cursor.getString(2);
                 String path = cursor.getString(3);
                 String artist = cursor.getString(4);
 
-                MusicFiles musicFiles = new MusicFiles(path,title,artist,album,duration);
-                Log.e("Path: "+path,"Album: "+album);
+                MusicFiles musicFiles = new MusicFiles(path, title, artist, album, duration);
+                Log.e("Path: " + path, "Album: " + album);
                 tempAudioList.add(musicFiles);
             }
             cursor.close();
