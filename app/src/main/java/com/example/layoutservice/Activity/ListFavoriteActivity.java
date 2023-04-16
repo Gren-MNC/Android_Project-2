@@ -70,8 +70,13 @@ public class ListFavoriteActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     SongFireBase songFireBase = dataSnapshot.getValue(SongFireBase.class);
-                    songFireBaseArrayList.add(songFireBase);
+                    assert songFireBase != null;
+                    if(songFireBase.isFavorite() == true) {
+                        songFireBaseArrayList.add(songFireBase);
+                    }
                 }
+
+
                 firebaseSongAdapter = new FirebaseSongAdapter(ListFavoriteActivity.this,songFireBaseArrayList);
                 recyclerView.setAdapter(firebaseSongAdapter);
                 firebaseSongAdapter.notifyDataSetChanged();

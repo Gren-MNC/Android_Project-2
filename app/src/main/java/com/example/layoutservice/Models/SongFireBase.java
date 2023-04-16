@@ -1,7 +1,5 @@
 package com.example.layoutservice.Models;
 
-import android.net.Uri;
-
 import java.io.Serializable;
 
 public class SongFireBase implements Serializable {
@@ -9,6 +7,7 @@ public class SongFireBase implements Serializable {
     private String singer;
     private String image;
     private String songUri;
+    private boolean isFavorite;
 
     public String getTitle() {
         return title;
@@ -34,11 +33,20 @@ public class SongFireBase implements Serializable {
         this.songUri = songUri;
     }
 
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
     public SongFireBase(String title, String singer, String image, String songUri) {
         this.title = title;
         this.singer = singer;
         this.image = image;
         this.songUri = songUri;
+        this.isFavorite = false;
     }
 
     public String getImage() {

@@ -50,6 +50,7 @@
             android:background="@drawable/ic_download"
             android:contentDescription="btn_download"/>
         <Button
+            android:id="@+id/btn_favorite"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="5dp"

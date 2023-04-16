@@ -3,6 +3,7 @@ package com.example.layoutservice.Adapter;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,6 +28,8 @@ import com.example.layoutservice.Fragment.Fragment_ChuDe_TheLoai;
 import com.example.layoutservice.Models.Song;
 import com.example.layoutservice.Models.SongFireBase;
 import com.example.layoutservice.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,22 +39,26 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapter.FirebaseHolder> {
 
     private Context context;
     private ArrayList<SongFireBase> songFireBasesList;
     private int positionSelect = -1;
+    DatabaseReference databaseReference;
 
 
     @NonNull
     @Override
     public FirebaseSongAdapter.FirebaseHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_sub_single, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_sub_single, parent, false);
         return new FirebaseSongAdapter.FirebaseHolder(view, parent);
     }
-    public FirebaseSongAdapter(Context context,ArrayList<SongFireBase> songFireBasesList){
+
+    public FirebaseSongAdapter(Context context, ArrayList<SongFireBase> songFireBasesList) {
         this.songFireBasesList = songFireBasesList;
         this.context = context;
     }
@@ -60,7 +67,7 @@ public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapte
     public void onBindViewHolder(@NonNull FirebaseSongAdapter.FirebaseHolder holder, int position) {
 
         SongFireBase songFireBase = songFireBasesList.get(position);
-        if(songFireBase == null){
+        if (songFireBase == null) {
             return;
         }
 
@@ -68,15 +75,50 @@ public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapte
         holder.txtSingle.setText(songFireBase.getSinger());
         Picasso.with(holder.imgAva.getContext()).load(songFireBase.getImage()).into(holder.imgAva);
 
+        if(songFireBase.isFavorite()){
+            holder.btnFavorite.setBackgroundResource(R.drawable.ic_like2);
+        }
+        else {
+            holder.btnFavorite.setBackgroundResource(R.drawable.ic_like1);
+        }
+
+        holder.btnFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(songFireBase.isFavorite()){
+                    holder.btnFavorite.setBackgroundResource(R.drawable.ic_like1);
+                    songFireBase.setFavorite(false);
+                }
+                else{
+                    holder.btnFavorite.setBackgroundResource(R.drawable.ic_like2);
+                    songFireBase.setFavorite(true);
+                }
+                databaseReference = FirebaseDatabase.getInstance().getReference("SongFireBase");
+                HashMap song = new HashMap<>();
+                song.put("title", songFireBase.getTitle());
+                song.put("singer", songFireBase.getSinger());
+                song.put("image", songFireBase.getImage());
+                song.put("songUri", songFireBase.getSongUri());
+                song.put("isFavorite", songFireBase.isFavorite());
+                databaseReference.child(songFireBase.getTitle()).updateChildren(song).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(context, "Updated!!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+        if (songFireBase.isFavorite()) {
+            holder.btnFavorite.setBackgroundResource(R.drawable.ic_like2);
+        }
 
         holder.layout_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 positionSelect = holder.getAdapterPosition();
                 Intent intent = new Intent(context, ListenToMusicActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("object_song",songFireBase);
+                bundle.putSerializable("object_song", songFireBase);
                 bundle.putSerializable("listSong_key", songFireBasesList);
                 bundle.putInt("position_key", holder.getAdapterPosition());
                 intent.putExtras(bundle);
@@ -88,13 +130,14 @@ public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapte
             public void onClick(View v) {
                 String path = String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
 
-                downloadSong(context, songFireBase.getTitle(),".mp3",
+                downloadSong(context, songFireBase.getTitle(), ".mp3",
                         path, songFireBase.getSongUri());
 
             }
         });
     }
-    public void downloadSong(Context context1, String filename, String fileExtension, String destinationDirectory, String url){
+
+    public void downloadSong(Context context1, String filename, String fileExtension, String destinationDirectory, String url) {
         DownloadManager downloadManager = (DownloadManager) context1.getSystemService(Context.DOWNLOAD_SERVICE);
         Uri uri = Uri.parse(url);
         DownloadManager.Request request = new DownloadManager.Request(uri);
@@ -109,13 +152,15 @@ public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapte
     public int getItemCount() {
         return songFireBasesList.size();
     }
-    public static class FirebaseHolder extends  RecyclerView.ViewHolder{
+
+    public static class FirebaseHolder extends RecyclerView.ViewHolder {
 
         private ImageView imgAva;
         private TextView txtSong;
         private TextView txtSingle;
         private LinearLayout layout_item;
         private Button btnDownload;
+        private Button btnFavorite;
 
         public FirebaseHolder(@NonNull View v, ViewGroup viewGroup) {
             super(v);
@@ -125,6 +170,7 @@ public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapte
             txtSong = v.findViewById(R.id.tv_song);
             imgAva = v.findViewById(R.id.img_song);
             btnDownload = v.findViewById(R.id.btn_download);
+            btnFavorite = v.findViewById(R.id.btn_favorite);
         }
     }
 }
