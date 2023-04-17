@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.layoutservice.Adapter.FavoriteSongAdapter;
 import com.example.layoutservice.Adapter.FirebaseSongAdapter;
 import com.example.layoutservice.Adapter.SongFavoriteAdapter;
 import com.example.layoutservice.Models.MusicFiles;
@@ -45,7 +46,7 @@ public class ListFavoriteActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private SongFavoriteAdapter songFavoriteAdapter;
     ArrayList<SongFireBase> songFireBaseArrayList;
-    FirebaseSongAdapter firebaseSongAdapter;
+    FavoriteSongAdapter Adapter;
     FirebaseDatabase db;
     DatabaseReference databaseReference;
     Context context;
@@ -58,13 +59,13 @@ public class ListFavoriteActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btn_back_favorite);
         recyclerView = findViewById(R.id.rcv_data_favorite);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("SongFireBase");
+        databaseReference = FirebaseDatabase.getInstance().getReference("FavoriteMusic");
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         songFireBaseArrayList = new ArrayList<>();
-        firebaseSongAdapter = new FirebaseSongAdapter(context, songFireBaseArrayList);
+        Adapter = new FavoriteSongAdapter(context, songFireBaseArrayList);
 
-        recyclerView.setAdapter(firebaseSongAdapter);
+        recyclerView.setAdapter(Adapter);
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
@@ -72,24 +73,16 @@ public class ListFavoriteActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     SongFireBase songFireBase = dataSnapshot.getValue(SongFireBase.class);
-                    assert songFireBase != null;
 
                     songFireBaseArrayList.add(songFireBase);
                 }
-
-                ArrayList<SongFireBase> songList = new ArrayList<>();
-                for(SongFireBase s: songFireBaseArrayList){
-                    if (s.isFavorite()){
-                        songList.add(s);
-                    }
-                }
 //                Toast.makeText(ListFavoriteActivity.this, String.valueOf(songList.size()), Toast.LENGTH_SHORT).show();
 
-                firebaseSongAdapter = new FirebaseSongAdapter(ListFavoriteActivity.this, songList);
-                recyclerView.setAdapter(firebaseSongAdapter);
+                Adapter = new FavoriteSongAdapter(ListFavoriteActivity.this, songFireBaseArrayList);
+                recyclerView.setAdapter(Adapter);
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                firebaseSongAdapter.notifyDataSetChanged();
+                Adapter.notifyDataSetChanged();
             }
 
             @Override

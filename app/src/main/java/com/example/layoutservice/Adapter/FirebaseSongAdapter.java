@@ -1,5 +1,6 @@
 package com.example.layoutservice.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
@@ -21,8 +22,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.layoutservice.Activity.ListFavoriteActivity;
 import com.example.layoutservice.Activity.ListSongSingleActivity;
 import com.example.layoutservice.Activity.ListenToMusicActivity;
 import com.example.layoutservice.Activity.MainActivity;
@@ -48,6 +52,7 @@ import java.util.Map;
 public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapter.FirebaseHolder> implements Filterable {
 
     private Context context;
+    private FirebaseSongAdapter adapter;
     private ArrayList<SongFireBase> songFireBasesList;
     private ArrayList<SongFireBase> filterList;
     private int positionSelect = -1;
@@ -65,6 +70,7 @@ public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapte
         this.songFireBasesList = songFireBasesList;
         this.filterList = songFireBasesList;
         this.context = context;
+        this.adapter = this;
     }
 
     @Override
@@ -78,43 +84,42 @@ public class FirebaseSongAdapter extends RecyclerView.Adapter<FirebaseSongAdapte
         holder.txtSong.setText(songFireBase.getTitle());
         holder.txtSingle.setText(songFireBase.getSinger());
         Picasso.with(holder.imgAva.getContext()).load(songFireBase.getImage()).into(holder.imgAva);
-
-        if(songFireBase.isFavorite()){
-            holder.btnFavorite.setBackgroundResource(R.drawable.ic_like2);
-        }
-        else {
-            holder.btnFavorite.setBackgroundResource(R.drawable.ic_like1);
-        }
-
-        holder.btnFavorite.setOnClickListener(new View.OnClickListener() {
+        databaseReference = FirebaseDatabase.getInstance().getReference("FavoriteMusic");
+        ArrayList<SongFireBase> favoriteList = new ArrayList<>();
+        databaseReference.child(songFireBase.getTitle()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void onClick(View view) {
-                if(songFireBase.isFavorite()){
-                    holder.btnFavorite.setBackgroundResource(R.drawable.ic_like1);
-                    songFireBase.setFavorite(false);
-                }
-                else{
-                    holder.btnFavorite.setBackgroundResource(R.drawable.ic_like2);
-                    songFireBase.setFavorite(true);
-                }
-                databaseReference = FirebaseDatabase.getInstance().getReference("SongFireBase");
-                HashMap song = new HashMap<>();
-                song.put("title", songFireBase.getTitle());
-                song.put("singer", songFireBase.getSinger());
-                song.put("image", songFireBase.getImage());
-                song.put("songUri", songFireBase.getSongUri());
-                song.put("isFavorite", songFireBase.isFavorite());
-                databaseReference.child(songFireBase.getTitle()).updateChildren(song).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(context, "Updated!!", Toast.LENGTH_SHORT).show();
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    if(task.getResult().exists()){
+                        holder.btnFavorite.setBackgroundResource(R.drawable.ic_like2);
+                        holder.btnFavorite.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                holder.btnFavorite.setBackgroundResource(R.drawable.ic_like1);
+                                databaseReference.child(songFireBase.getTitle()).removeValue(new DatabaseReference.CompletionListener() {
+                                    @SuppressLint("NotifyDataSetChanged")
+                                    @Override
+                                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                });
+                            }
+                        });
                     }
-                });
+                    else {
+                        holder.btnFavorite.setOnClickListener(new View.OnClickListener() {
+                            @SuppressLint("NotifyDataSetChanged")
+                            @Override
+                            public void onClick(View view) {
+                                holder.btnFavorite.setBackgroundResource(R.drawable.ic_like2);
+                                databaseReference.child(songFireBase.getTitle()).setValue(songFireBase);
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
+                }
             }
         });
-        if (songFireBase.isFavorite()) {
-            holder.btnFavorite.setBackgroundResource(R.drawable.ic_like2);
-        }
 
         holder.layout_item.setOnClickListener(new View.OnClickListener() {
             @Override
